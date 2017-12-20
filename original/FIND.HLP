@@ -1,0 +1,18 @@
+
+WHAT IT DOES: "F)ind" searches for messages that containç
+some word that you are interested in. Pup will find the NEXTç
+message that has the thing you search for. (Repeat "F)ind"ç
+until you hit BOTTOM.)
+
+HOW TO DO IT: Enter something that might be in the messageç
+you're searching for; if your name is "WIGGLEY WORM", tryç
+searching for "Wig" or "Worm" or "ggle". Searching for theç
+letter "E" is stupid. Pup doesn't care about capitalization,ç
+etc. 
+
+HINTS: First time, try being specific: if that doesn't work,ç
+be more general, or try another word. Use "S)tart-Where" toç
+start from the TOP message; otherwise you might miss some. 
+
+Pup searches through the entire message, FROM, TO, TITLE andç
+the text of the message.

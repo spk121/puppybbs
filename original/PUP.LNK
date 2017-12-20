@@ -1,0 +1,18 @@
+%
+% Pup was linked with PLINK86.EXE, you can of course use whatever
+% you want; sucky old LINK.EXE will work fine. PLINK.COM is great
+% for CPM.
+%
+output pup.exe
+verbose
+file \c\cs,\c\tms,pupmain,pup,login,quote	% main function stuff
+% file fidonet,fsc001,packeter,unpacketer,topicmap % fidonet system
+file sched,support,printf			% high level support
+file msgbase,edit				% message system
+file files					% file system
+file xmodem,mdmfunc,modemio			% protocol & I/O support
+file ms-asm,ms-c,abort				% system dependent support
+
+search \c\lcs					% standard library
+search \drivers\ibm				% hardware drivers
+map = pup.map m a g

@@ -1,0 +1,48 @@
+compile = lc.com -s -ms 
+pup.exe: pupmain.obj modemio.obj pup.obj login.obj quote.obj edit.obj 
+support.obj support.obj sched.obj msgbase.obj files.obj 
+xmodem.obj mdmfunc.obj abort.obj ms-c.obj ms-asm.obj printf.obj
+fidonet.obj fsc001.obj packeter.obj unpacketer.obj topicmap.obj
+	plink.exe @pup
+modemio.obj: modemio.c puppy.h pupmem.h
+	$(compile) modemio
+pupmain.obj: pupmain.c puppy.h pupmem.h
+	$(compile) pupmain
+fidonet.obj: fidonet.c puppy.h pupmem.h
+	$(compile) fidonet
+fsc001.obj: fsc001.c puppy.h pupmem.h
+	$(compile) fsc001
+packeter.obj: packeter.c puppy.h pupmem.h
+	$(compile) packeter
+unpacketer.obj: unpacketer.c puppy.h pupmem.h
+	$(compile) unpacketer
+topicmap.obj: topicmap.c puppy.h pupmem.h
+	$(compile) topicmap
+pup.obj: pup.c puppy.h pupmem.h
+	$(compile) pup
+login.obj: login.c puppy.h pupmem.h
+	$(compile) login
+quote.obj: quote.c puppy.h pupmem.h
+	$(compile) quote
+edit.obj: edit.c puppy.h pupmem.h
+	$(compile) edit
+support.obj: support.c puppy.h  pupmem.h
+	$(compile) support
+sched.obj: sched.c puppy.h  pupmem.h
+	$(compile) sched
+msgbase.obj: msgbase.c puppy.h pupmem.h
+	$(compile) msgbase
+files.obj: files.c puppy.h pupmem.h
+	$(compile) files
+xmodem.obj: xmodem.c puppy.h  pupmem.h
+	$(compile) xmodem
+mdmfunc.obj: mdmfunc.c puppy.h pupmem.h
+	$(compile) mdmfunc
+printf.obj: printf.c 
+	$(compile) printf
+ms-c.obj: ms-c.c 
+	$(compile) ms-c
+abort.obj: abort.asm 
+	masm.exe abort;
+ms-asm.obj: ms-asm.asm 
+	masm.exe ms-asm;

@@ -1,0 +1,10 @@
+HELP! 
+
+M - Go into the message base
+H - Set screen stuff & Pup says "Hello!"
+D - Download and list Files
+U - Upload files to Puppy
+B - Say goodbye (or just hang up)
+
+Control-K Aborts anything!
+Control-S Pauses anything! (any other key to continue)

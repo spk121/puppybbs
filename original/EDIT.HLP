@@ -1,0 +1,20 @@
+HELP! Entering new messages
+
+C - Cancel this message (asks you OK first)
+A - Add more text to the end
+I - Insert text in between existing text
+D - Delete a line of text
+L - List the message so far
+S - Save this message for all to see
+
+MAGIC STUFF:
+
+Don't hit RETURN; just type! Pup will wrap word you type soç
+that they fit on your screen. Use RETURN for paragraphs. Tryç
+it you'll like it.
+
+Control-I (TAB) moves you to evenly spaced columns
+Control-X erases the whole line
+Control-K aborts anything!
+Control-S pauses anything! (Anything else to continue)
+

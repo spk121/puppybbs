@@ -1,0 +1,583 @@
+T. Jennings
+Fido Software
+164 Shipley 
+San Francisco CA 94107
+
+VERSION HISTORY
+Version 1a: Nov 87
+FEATURES: First version; "pile" based message system,ç
+interface consists of a stack of messages with the mostç
+recent at the top. "Topics" used to partition messages. Noç
+caller base.
+
+Version 2a: 28 Dec 87
+FEATURES: Linear message base, accessed by dates. Topicsç
+more like Fido type "message areas". Simple caller dataç
+base, hashed lookup and entry, no passwords. Caller baseç
+recorded "last connected on" time and date, used toç
+reference last-read messages. PROBLEMS: Calling in withoutç
+reading anything "updated" (sic) the last-read message info.ç
+Last-read didn't take into account last-read for each topic.
+
+Version 2b: 28 Jan 88
+FEATURES: Caller records contain last-read date for eachç
+possible topic; last-read is properly handled in all cases.ç
+Slightly improved topic handling. 
+
+
+-*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- 
+
+		 I M P O R T A N T
+
+Filenames changed, please rename them:
+
+	MESSAGE.DAT -> PUPPY.DAT
+	MESSAGE.IDX -> PUPPY.IDX
+
+The format of the message base index file changed: you MUSTç
+run 2a-to-2b.EXE to convert it. No data is lost. It fixesç
+the dates to the new compact format.
+
+-*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- -*-*- 
+			Puppy
+
+
+PLEASE NOTE: This does not pretend to be a nice neat readyç
+to use BBS package. It is intended as a kit of sources, withç
+a pclone demonstration program, so that you can build yourç
+own, hopefully on the zillions of small non-pclone machinesç
+out there. 
+
+Pup is a very modest project: it is a very small scaleç
+bulletin board, targeted mainly for the current low-end typeç
+machines; Z80, 64K, maybe 500K disk storage, primitive DOS.ç
+It of course works fine on MSDOS; there is a pclone versionç
+available. (Ask)
+
+By Jan/Feb of 88, Pup will have a full featured FidoNetç
+compatible network interface. The design is complete, andç
+some code is done. 
+
+
+While the pclone version is where new things get tested, itç
+is NOT the point of Pup. There are already more than enoughç
+pclone BBSs to choose from; Pup however would fit veryç
+comfortably into the smallest possible pclone these days,ç
+and probably a good use for all those dead PC Jrs out thereç
+somewhere.
+
+BBSs have escalated in complexity way out of proportion toç
+their usefulness; most BBSs are used by highly skilledç
+people with lots of resource$ to talk to people likeç
+themselves. This is fine, but most of the world isn't in theç
+position to sit $1,000 (or more!) in a corner of the roomç
+for one special purpose only.
+
+Also, the trend is towards larger, more complex systems,ç
+wide area networking, extremely high throughput dataç
+transfers and other things that just push the likes of Fido,ç
+Opus, TBBS an order of magnitude or two out of the range ofç
+many (if not most) people who might benefit from them.
+
+Seems we've forgotten that the original intent of BBSs wasç
+to communicate with other people. It is not obvious to meç
+that talking to more people is better. The best BBSs I'veç
+ever used, of any type, at any time, were all very smallç
+systems; RCP/Ms, Apple][/GBBS, etc. Most used awfulç
+software, but were still the best (meaning most useful orç
+most amusing) systems I've run across. There's a hint there,ç
+I think.
+
+
+I would love to see Pup ported to CP/M (especially: thatç
+awful Heath/Zenith H-89 under ZDOS) and Apple ][ PRODOS orç
+something.
+.pa
+.he Copyrights, trademarks, money, that sort of thing.
+
+		S H A R E W A R E 
+
+Puppy is shareware; if you like it or find it or parts of itç
+useful, then mail me what you think it's worth. $40 isç
+suggested. Less will not be considered an insult. In return,ç
+I will mail you a diskette with the latest & greatest on it.
+
+Check out the pclone version, show it to people, see whatç
+your reaction is. It should be portable as-is to smallç
+machines.
+
+OK, down to brass tacks. (What on earth does that mean?) I,ç
+Tom Jennings, do business as Fido Software, at the addressç
+below. My commercial products are copyrighted works, and myç
+sole source of income. Copyrighted works produced by me willç
+be marked as such:
+
+		Copyright Tom Jennings 1987, etc
+
+This is very straightforward. These are commercial products;ç
+you want, you pay. Or the guy in the big car over there willç
+make you pay double later, OK?
+
+
+Now for years I have been writing programs and distributingç
+them, in binary and some in source form, but I've never madeç
+it very clear what their status was. Partly this is becauseç
+the previous environment (less cutthroat) was more friendlyç
+and less demanding, and partly because I just wasn't thatç
+organized. This is to change starting now. (now?)
+
+
+The following notice will be firmly affixed to all programsç
+produced by me that are not commercial copyrighted works.ç
+Please don't utter the phrase "public domain" because thatç
+means something awful:
+
+		(k) All Rights Reversed
+
+(hail Eris) This means: what you do with it is up to you. Iç
+ask though, that if you distribute it, you provide sourcesç
+as part of the package, at no extra cost or penalty orç
+obligation to the person receiving it; and that you also doç
+not remove the (k) All Rights Reversed notice. I also askç
+that you don't change the version number, if there is one;ç
+you will only needlessly confuse people when I come out withç
+a new version. Hint: Add your own IDs after it, like "1-AB"ç
+where "AB" is your version number.
+
+
+"Fido" is a trademark of Tom Jennings. It you utter it sendç
+me a dollar. "FidoNet" is a registered trademark of Tomç
+Jennings. If you even think it send me two dollars. If youç
+use both, send me ten dollars and your first born child. Allç
+rights reserved, and all wrongs righted. So there.
+
+
+	Fido Software
+	164 Shipley
+	San Francisco CA 94107
+	(415)-764-1629, FidoSW, using Fido v12 1:125/111
+	(415)-882-9835, ch@os, using Puppy v1
+	  soon will be known as 1:125/164
+
+If you have anything to contribute, please do. 
+.pa
+Historical Curiosities: An Editorial
+
+A little history is in order here. I, like hundreds ofç
+others, have been hanging out on BBSs and writing freeç
+programs since Ward & Randy's CBBS in the late 70's. Nothingç
+new or unique or interesting here.
+
+Fido, started in 1984, is by far the most popular and wellç
+known program I have ever produced. To say it exceededç
+anything I ever planned for it is an understatement.ç
+Requests for diskettes got so heavy that I started chargingç
+for diskettes; as demand for functions and reliabilityç
+increased, by many hundreds of people, it slowly turned intoç
+a part-time business.
+
+Now it eventually became obvious that this wasn't a typicalç
+free BBS program, and that others wanted to write FidoNet≠
+compatible programs; Thom Henderson had sucessfully gottenç
+SeaDog running. An effort went into documenting the protocolç
+(Randy Bush did a wonderful job with the FSC001 doc a yearç
+later) and making structures public, etc. Interfaceç
+information was released with each version, and work wasç
+started towards the real technical specification,ç
+culminating in FSC001. 
+
+Eventually, Fido/FidoNet became a full time job. I nowç
+derive all of my income from it. (I license Fido/FidoNet toç
+mostly small to medium companies and non-militaryç
+governmental agencies.) Because of this, Fido is no longerç
+free, starting with version 12. (You can now use previousç
+versions for free; v11 manuals once again available for $35)
+
+My roots and heart is still in the hobbiest end of things,ç
+and Fido Software is hardly a traditional software company.ç
+I am working on new software for hobbiests, both "free" andç
+"shareware". I now fund this development from licensingç
+Fido, and hopefully other sources in the future. I'm hardlyç
+getting rich from this, and that's not the point.
+
+My goal today is somewhat subversive I suppose; I want toç
+see more non-technical people use computers forç
+communicating in ways not traditionally though of, and onç
+small cheap machines; not by throwing money at high-endç
+pclones or traditional services. (You're supposed to doç
+wierd things with computers, that's what they're for!)
+
+Traditional media in the U. S. is getting more and moreç
+restricted to lowest-common-denominator, safe, bland,ç
+*profitable* mindless pap. (Did you know: only 26ç
+corporations own 1/2 or more of all media in the US:ç
+magazines, books, TV, radio, newspapers, etc? Source:ç
+"Fairness & Accuracy in Reporting", June 87) Individuals andç
+small groups running BBSs and writing 'zines is one way toç
+promote free (as in open) communications.
+
+Some have asserted that I'm a greedy programmer trying toç
+milk money from peoples hobby with Fido (how dare I chargeç
+money) and that I don't care about much else.
+
+I will merely say: I've been writing free software sinceç
+1979, and have had phenomenal, unexpected success withç
+Fido/FidoNet, which I have basically given to the world,ç
+gratis. My attitudes haven't changed much, except to get aç
+bit more radical. Time will tell, as it always does.
+
+OK, I'll shut up now.
+.pa
+Pup's FidoNet interface
+
+Suffice to say at this point, it will be both highç
+performance, and will fit very nicely on a 64K Z80 with aç
+couple of decent sized floppies.
+
+Keep in mind it's not meant to act as a gateway to all ofç
+Western Europe. You would probably have a hard time evenç
+making it a Net Host.
+
+What it will do though is run up to 16 echo conferences at aç
+higher software-performance level available on any machineç
+today, period. No space- and time-consuming packeting andç
+unpacketing, no external conferencing packages.
+
+Use of the nodelist will be optional; for echo conferences,ç
+only the system information for the next-in-line systemç
+(Pup, Fido, Opus, etc) is needed. 
+
+
+The method is: on-the-fly packeting and unpacketing. The Pupç
+FidoNet code uses XMODEM to send the packet, as per FSC001ç
+specifications. However, instead of generating a packet fileç
+ahead of time, then XMODEMing it out, when XMODEM goes toç
+"read" a block from the packet file, it uses a state machineç
+to generate the data as it goes. Because the message base isç
+one contiguous file, with a memory resident index,ç
+performance is not a problem. This part is already coded.
+
+The receiver does a similar thing. As XMODEM receivesç
+blocks, it would normally write them to a packet file forç
+later unpacking into messages. In Pup, the blocks are notç
+written to a file, but decomposed byte by byte into theç
+message base directly. Again, because of the message baseç
+design performance isn't an issue.
+
+28 Dec 87: the packeter is complete, and should sendç
+messages before new years. The unpacketer should takeç
+another week. The current program size is 42K, not includingç
+the unpacketer. Expected total executable size: 48K.
+.pa
+.he Pup the Bulletin Board
+
+Pup has all the usual amenities, but it doesn't appear thatç
+way when you first look at it. There's only ten commands orç
+so total.
+
+The message base consists of two files, one that containsç
+the message body text, and the other is an index with theç
+usual TO:, FROM:, etc information, as well as the TOPICç
+information. (More on Topics later.)
+
+Pup's message base is created once when SET-PUP is run, andç
+never changes in size. (You can set the size of each messageç
+and the number of messages.) (And later there will be a wayç
+to change the size, but not right away.) The advantages: itç
+never grows to fill your disk; performance is extremely goodç
+(if you format the disk first, you will be guarenteed thatç
+all sectors in the file are contiguous); there is no needç
+for message base maintenance.
+
+The caller base (new on v2) uses an identical process. Thereç
+is a single preallocated file that contains one record perç
+caller. Each record contains a name, a time & date, andç
+screen settings. The callers name at login is hashed into anç
+index (CCITT CRC-16 was laying around) and is very quick. Itç
+has the same advantages as the message base, plus not havingç
+to search linearly at login. The disadvantage is that it canç
+potentially bump out existing callers whose names happen toç
+have the same CRC. Tough tootsies.
+
+If you get the idea that I am intentionally leaving outç
+things considered "important", you are right. Nothing isç
+sacred.
+
+Back to the message base.
+
+
+The fixed length message file is treated as a ring buffer;ç
+once all the slots are filled, adding a new message at oneç
+end overwrites one at the other end. The two ends of theç
+buffer are of course one single point, which is stored inç
+the system file. (Dont lose it!)
+
+Message numbers don't have much meaning in this environment.ç
+Messages are identified by date. The two "ends" of theç
+message base are considered the "newest" and the "oldest".ç
+There is code in the message base to handle messages in thisç
+manner. 
+
+When you first login to Pup, you are positioned at the firstç
+message created since you last logged in; if this is yourç
+first call, you see the oldest message. You hit "CR" to readç
+messages sequentially until you reach the newest message.
+
+
+Now a huge monolithic message base isn't much fun to pokeç
+around in. This is where Topics come in. 
+
+Pup can have up to 16 topics; you must have at least one.ç
+Topics are the usual grouping, areas, subjects, that sort ofç
+thing. In Pup though, instead of rigid barricades thatç
+messages must be forced within, in Pup you can hop Topics atç
+will. 
+
+When reading messages, you can choose which which topics youç
+wish to see, including "all". If you choose one topic, thenç
+those are the only messages you will see. If you chooseç
+"all", then you see messages in any topic; this is nice forç
+browsing a board for the first time or two. If you're onlyç
+interested in two or three topics, you can select only thoseç
+and you will see no others.
+
+When you enter a message, Pup puts it into the last-readç
+topic, so that even if you have "all" or many topicsç
+selected messages go into the right place.
+
+.pa
+Puppy and human callers
+
+Pup didn't have a caller base until v2. This wasn't as awfulç
+as it sounds; the only problem was it made it hard to keepç
+track of new messages that came in after you last logged in.ç
+Old systems such as CBBS made you just remember or writeç
+down message numbers (I never did) or made you poke aroundç
+for 15 minutes while you refreshed your memory. The "lastç
+message read" markers in Fido's system are a nightmare ofç
+problems and limitations, who needs that. These areç
+important issues, and need some new thought and design, theyç
+can't be coded away. 
+
+The other uses for a caller record are trivial, such asç
+their name and screen settings. 
+
+Be warned: Pups caller file is nothing more than a notepadç
+for the caller. It is not a security system. Its purpose isç
+to remember screen settings and what new messages wereç
+entered since last call, and thats it. See the designç
+philosophy box below.
+
+
+Pups caller file is fixed length, and created by SET-PUP.ç
+Pup indexes records by creating a CRC-16 hash code from theç
+ASCII users name and jams into the caller file. (The fixupç
+hash on hits as of v2a needs work.) It is very quick, butç
+has the disadvantage of overwriting other caller names withç
+the same CRC.
+
+DESIGN PHILOSOPHY
+
+Its a little wierd at first ... but you get used to it. Oneç
+objection that pops to mind is: how do I know that thatç
+person is who he says he is? Well, you don't. Actually ...ç
+if you are conversing with someone (not what you call whatç
+happens when there are 500+ people using a system!) it'sç
+pretty obvious. Also, it's not much of a challenge and notç
+worth the bother of entering stupid messages. Remember also,ç
+this isn't targeted at the mainstream BBS crowd.
+
+How do you run a system then, with upwards of 500 differentç
+people per month? Get a Fido or other large scale (largeç
+resource) type program, which fits those sort ofç
+installations perfectly.
+.pa
+OK, enough: what's on the disk
+
+The end result of all the crap in the Pup package is twoç
+programs and a few support files:
+
+	PUP.EXE		the Pup program
+	SET-PUP.EXE	the Pup installer
+	PUP.SET		Pup configuration text file
+	FIDO2PUP.EXE	Fido to Pup message converter
+
+	WELCOME.PUP	the initial welcome message
+	FILES.PUP	list of download files
+	MAIN.HLP	various help files ...
+	MESSAGE.HLP	...
+	EDIT.HLP	...
+
+Set-Pup creates these:
+	PUPPY.SYS	main system file
+	PUPPY.CLR	the caller file
+	PUPPY.DAT	(was MESSAGE.DAT) the message base 
+	PUPPY.IDX	(was MESSAGE.IDX) message bsae index
+
+SET-PUP reads the text file PUP.SET and compiles it into theç
+PUPPY.SYS file that contains the installation type goodiesç
+(modem type, node number, limits and controls) and createsç
+an empty message base, if one doesn't already exist.
+
+PUP is the BBS program, and reads all the other junk. 
+
+FIDO2PUP puts any Fido .MSG messages into the Pup messageç
+base, and leaves the highest numbered one as the Topç
+message. Gives you something to start with.
+
+.pa
+The complete list of files is:
+
+Include files:
+ASCII.H
+PUPMEM.H
+PUPPY.H
+DRIVER.H
+LATTICE.ASH
+
+Various tools for compilation:
+C.BAT
+PUP		MAKE file
+PUP.LNK		PLINK command file
+IBM.LIB		pclone serial driver library
+DRIVER.DOC	Pup/Fido driver specification
+
+PUPMAIN.C	Pup main() and main loop
+PUP.C		Pup commands 
+LOGIN.C		Caller login process
+MSGBASE.C	the message base system
+FILES.C		Pup file commands
+QUOTE.C		signon quotations
+SCHED.C		the scheduler
+EDIT.C		message editor
+
+* Not ready yet
+*FIDONET.C	FidoNet main control
+*FSC001.C	FSC001 protocol module
+*PACKETER.C	Packeter module
+*UNPACKETER.C	Unpacketer module
+*TOPICMAP.C	Topic map controls
+
+XMODEM.C	XMODEM/TELINK protocol handler
+MODEMIO.C	(not so) low level I/O
+MDMFUNC.C	modem drivers
+SUPPORT.C	misc. support routines
+PRINTF.C	a real printf()
+MS-C.C		DOS dependent C routines
+MS-ASM.ASM	DOS dependent ASM routines
+ABORT.ASM
+
+FIDO2PUP.C	Fido msg converter
+SET-PUP.C	config program
+
+PUP.SET		sample config file
+FILES.PUP	sample files list
+WELCOME.PUP	sample welcome file
+QUOTES.PUP	sample quotations
+MAIN.HLP	sample help files
+MESSAGE.HLP
+EDIT.HLP
+.pa
+.he Implementation Notes
+
+GENERAL
+
+Data structures and other definitions of global importanceç
+to Pup are in PUPPY.H, which is included by all .C files inç
+Pup. When you change this file, recompile all modules; theç
+make file provided will do this with RMAKE.EXE from Phoenixç
+Software.
+
+Global static data is defined in PUPMAIN.C, and referencesç
+to it via #extern's are in PUPMEM.H. All sources exceptç
+PUPMAIN.H include PUPMEM.H. It's the easiest way I've foundç
+to manage external data; the one time it's a pain is if youç
+add or delete a global variable (in PUPMAIN.C); you have toç
+recompile everything. Oh well.
+
+
+SERIAL INTERFACE
+
+The serial I/O driver provided, IBM.LIB, is for pclonesç
+only; you will need to write equivelant routines forç
+whatever your machine is, even on CP/M. Most are prettyç
+simple, and even polled is OK; Pup will even allow typeaheadç
+on polled machines, due to the lookeahead done in MODEMIO.C.
+
+Note that the drivers as defined in DRIVER.DOC are ratherç
+complex; you don't need anything but the low level serialç
+parts. (Poke through MODEMIO) Why not prune DRIVER.DOC andç
+pass out a proper version?
+
+Pup uses a three or four wire modem installation. It needs:
+
+	Tx Data		obviously
+	Rx Data		obviously
+	Ground		obviously
+	CD		Carrier Detect (pin 6 or 8)
+	DTR		Data Terminal Ready (pin 20)
+
+DTR is optional; see below.
+
+Pup has a parameter "cd-bit" in PUP.SET; this is the bitç
+mask pup uses to check for CD on the serial port. Pup ANDsç
+the contents of the status register with the cd-bit, and ifç
+the result is not zero, then the modem is assumed to beç
+online.
+
+CALLER INTERFACE I/O
+
+Basically, the I/O system is the same as Fido and has all ofç
+it's features: full typeahead, output pause (^S, ^Q),ç
+background abort-detect (^C, ^K), typeahead flush (^F),ç
+"command-ahead" (ie. "D N FILENAME.EXT X" executes a wholeç
+download command skipping all the prompts), formatted I/O,ç
+complete carrier loss detection with no programmaticç
+overhead, dead-user timer, full time limit enforcement.
+
+In theory, you should never have to mess with anything inç
+MODEMIO. And be careful if you do, it's filled withç
+recursive and effecient stuff, and I think it's pretty wellç
+commented. It does a lot just as it stands; it is four yearsç
+accumulated work and experience.
+
+
+MODEM SUPPORT
+
+As implemented, Pup will support just about any Hayes typeç
+modem. The modem must have a CD (Carrier Detect) line. DTRç
+is recomended, but not required.
+
+The initialization specified in PUP.SET should set the modemç
+to numeric result codes and autoanswer OFF. Pup answers theç
+phone by waiting for a RING result code, then issuing an ATAç
+command, and waiting for the CONNECT 1200 (or 2400, etc)ç
+message, and then assumes it's online and connected. Noç
+hocus pocus or complicated autobaud. 
+
+
+LITTLE ENDIAN vs. BIG ENDIAN
+
+This is the endless "Intel" vs. "Motorola" argument. Iç
+really don't care either way; neither does Pup. The onlyç
+part that cares about byte order is the FidoNet interface,ç
+and there you have no choice.
+
+The only time this might matter is if you were to generate aç
+message base on a Z80 and physically copy it to a 6502ç
+machine; you'd have to convert byte order. For locally≠
+generated data, it's not an issue.
+
+
+FUNCTION PORTABILITY
+
+I tried to keep things down to two kinds of portabilityç
+problems: C language data typing and O/S functionality.
+
+On C data types, most things don't care; general purposeç
+counters etc are just "int"s, etc. For ones that matter,ç
+almost all want to be either 8 or 16 bit data. For these, Iç
+defined two types: BYTE and WORD. In the Lattice 2.12/MSDOSç
+version, BYTE is defined as char, and WORD as int. Changeç
+accordingly to fit your system. These are defined inç
+PUPPY.H.

@@ -1,0 +1,203 @@
+Universal Drivers for Telink, Minitel, Fido, FidoNet,
+Sysop, and Rolodex.
+
+T. Jennings 	27 Nov 84
+		 7 Jul 87	_mbusy
+
+	All IO drivers MUST conform to this standard. All software will doç
+screen, clock, and modem IO through these drivers.
+
+GENERAL
+
+	You should put certain functions into seperate files, along theç
+following guidelines. The reason is that some programs use only the screenç
+functions (Rolodex, etc) some use only the modem functions (ViaDev, etc)ç
+and some use both (Fido, Telink, etc). Seperating them will allow notç
+loading the whole damn thing everytime.
+
+	Also, lconout must be in a seperate file; sometimes it is necessaryç
+to use the standard MSDOS lconout() so that redirection can still be used.ç
+PLINK will complain about multiple defineds unless you seperate them.
+
+	DRIVER.H defines the static variables that must be set. These are:
+
+
+CRT Variables
+
+int lines;	Number of lines on the screen, i.e. 24 for a
+		24 line screen.
+
+int cols;	The number of columns on the screen, i.e. 80
+		for an 80 column screen.
+
+int top;	A mistake, but this is the top line NUMBER. Zero
+		is just about universal, though, if the hardware
+		starts its line numbering at 1, set it to 1.
+
+int bottom;	The last line NUMBER, i.e. if the first line
+		number is 0, then for a 24 line screen this will
+		be 23.
+
+
+char ulcorner = '+';	These are the characters used in drawing
+char urcorner = '+';	boxes on the screen. if DRIVER.H is used,
+char llcorner = '+';	they have the indicated defaults.
+char lrcorner = '+';	They can be changed at init() time.
+char vertbar = '|';
+char horizbar = '-';
+
+char graph_on[];	These are null terminated strings, used to
+char graph_of[];	enable and disable graphics mode. If they are 
+			not null, then they are sent out before any 
+			attempts are made to draw the graphic 
+			characters above. These must be set at init() 
+			time.
+
+
+MODEM PARAMETERS
+
+unsigned cd_bit;	A bit mask for the modem input status
+			function. This should be used by the
+			_dsr() function (below) for testing
+			for Carrier Detect. It is set by the
+			main() of the program, with some sort
+			of default. If desired, the default can
+			be changed by the driver at init() time.
+
+TIMER PARAMETERS:
+
+long millisec;		These are incremented as millisecond
+long millis2;		counters. The resolution is 1 millisec;
+			however, high accuracy is not required. For
+			the IBM PC, 55 is added every timer tick,
+			and is close enough. For a 10 mS timer tick,
+			add 10, etc.
+
+int seconds;		Incremented at the same time as millisec,
+int minutes;		above. Seconds should run from 0 to 59, then
+			be cleared to zero, and minutes incremented. 
+			Minutes increments indefinitely; there is
+			no hours counter.
+
+
+
+FUNCTIONS:
+
+scrinit()		Set all the abovementioned screen variables.
+			This is always called before any screen
+			access is done.
+
+init()			Full hardware initialization. This sets up
+			any interrupt structures, calls scrinit(),
+			and performs any other initialization
+			necessary to make the hardware usable. This
+			should also raise the DTR line, if any 
+			(described below). There is a matching 
+			function, uninit().
+
+			This should start the clock ticking, and the
+			'minutes' variable incremented once per
+			minute. See NOTES, below, on a function to
+			perform this.
+
+uninit()		Take down any initialization necessary before
+			returning to DOS, such as clock interrupts.
+			NOTE: This should NEVER disturb the current
+			state of DTR. This is to allow one program
+			to terminate, and take control of the modem,
+			without losing carrier. See NOTES on taking
+			down the clock.
+
+baud(rate)		Set the baud rate of the serial port or
+			modem. 'rate' is the desired baud rate; it
+			returns the baud rate set, or zero if that 
+			rate is not supported.
+
+_mconstat()		Returns 0 if no character ready at the modem,
+			else any non-zero value. Do not remove the
+			character from the modem. Non-destructive
+			reads are performed at the next highest layer.
+
+_mconin()		Returns the contents of the modem data port. 
+			Wait for a character if necessary. Must return
+			an 8 bit value.
+
+_mconostat()		Return true if the modem is ready to accept
+			a character.
+
+_mconout(c)		Output character 'c' to the modem. Wait for
+			output ready if necessary.
+
+_cd()			Return true if CD is
+			true. This reads whatever status port, masks
+			it with the cd_bit value, and if true, returns
+			true. 
+			
+lower_dtr()		Drop a modem output control line. The
+			actual line used depends on the hardware.
+
+raise_dtr()		Raise a modem control line. This also
+			depends on the hardware. It should be
+			called by init().
+
+_mflush()		Flushes both (if any) input and output
+			buffers.
+
+_mbusy()		Returns true if there is anything in the
+			output buffer; ie. returns zero when the
+			output buffer is empty.
+			If there is no output buffer, then this
+			can return zero immediately.
+
+_mbreak(n)		Set a line break (n != 0) or remove a line
+			break. (n == 0). 
+
+
+TIMER FUNCTIONS:
+
+set_clk();		Start the timer running, and incrementing
+			the TIMER PARAMETERS, mentioned above.
+
+clr_clk();		Clears all of the timer counters to zero;
+			millisec, millis2, seconds, minutes.
+
+reset_clk();		Removes the clock timer.
+
+
+CRT FUNCTIONS:
+
+
+_lconout()		Optional function. The default one is in the
+			XENIX library, which goes through the DOS.
+			Create this one for custom applications
+			or raw speed.
+
+			Note that MSDOS redirection cannot be used
+			if this function is invoked. If redirection
+			is needed, write an _lconout() in the main
+			function, that uses MSDOS calls.
+
+place(line,col)		Place cursor at the specified line and 
+			column. Input has already been bounded and 
+			error checked; code for speed. The passed
+			line number starts at 0 (top of screen)
+			and columns start at 0 (left edge of screen.)
+
+			Avoid the use of printf(), etc, or anything 
+			else in "higher" level libraries. Use the 
+			local _lconout(), as this function wont be 
+			used if the program can use redirection.
+
+clreol()		Clear from current cursor position to end 
+			of line. Do not move the cursor. 
+
+insline()		Insert a blank line at the current cursor
+			line, and scroll the line under the cursor,
+			and all below it, down one. The inserted
+			line does not have to have any specific 
+			contents. Code for speed.
+
+delline()		Delete a line at the current cursor line.
+			The line under the cursor disappears, and
+			all lines below it scroll up one. The 
+			bottom line does not have to be cleared.
