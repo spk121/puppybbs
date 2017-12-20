@@ -239,7 +239,7 @@ static int finit(char *fn)
 	FLAG err;		/* error in file */
 	char *cp;
 
-	if ((_access("crt_ACCESS.C", 0)) == -1) {
+	if ((_access(fn, 0)) == -1) {
 		printf(" * Can't find Startup File %s\r\n", fn);
 		return(0);
 	}
