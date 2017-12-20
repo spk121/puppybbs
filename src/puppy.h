@@ -1,3 +1,4 @@
+#pragma once
 /*
 	Puppy's include file
 	T. Jennings 25 Jan 88
@@ -123,7 +124,9 @@ struct _msg *newmsg();
 
 /* These are elsewhere */
 
+#ifndef WIN32
 long lseek();
+#endif
 char *getmem();
 
 
