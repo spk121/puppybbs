@@ -87,7 +87,9 @@ DATE:	0 y y y y y y m m m m d d d d d
 #define IFNA 6				/* design by default */
 #define SEALINK 7			/* trademark SEA Associates */
 
+#ifndef NULL
 #define NULL 0				/* nothing */
+#endif
 
 #define MINS_HR	60			/* minutes in an hour */
 #define DAYS_WK 7			/* days in a week */

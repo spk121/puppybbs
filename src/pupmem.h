@@ -18,7 +18,7 @@ extern int klimit;		/* download limit in force */
 /* Local system shit */
 
 extern char months[13][4];	/* table of month names */
-extern FLAG abort;		/* True if ^C typed. */
+extern FLAG _abort;		/* True if ^C typed. */
 extern FLAG doscode;		/* DOS error code */
 extern char column;		/* column number, */
 extern char line;
