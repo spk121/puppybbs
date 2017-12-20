@@ -7,7 +7,7 @@ all: set-pup.exe puppy.exe
 .c.obj:  
   $(cc) $(cdebug) $(cflags) $(cvars) $*.c  
 
-puppy.exe: support.obj xmodem.obj 
+puppy.exe: sched.obj support.obj xmodem.obj 
   $(link) $(ldebug) $(conflags) -out:puppy.exe $** $(conlibs) lsapi32.lib  
 
 set-pup.exe: set-pup.obj
