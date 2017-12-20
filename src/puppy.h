@@ -40,10 +40,12 @@ drivers. Changing these assumptions may not be trivial, since they are
 frequently buried into the algorithms. (Check out XMODEM.C for a classic
 example of this.) */
 
+#include <stdint.h>
+
 #define FLAG char	/* just a boolean */
-#define BYTE char	/* Lattice chars are 8 bit */
-#define WORD unsigned	/* Lattice unsigneds are 16 bits */
-#define LONG long	/* Lattice ... */
+#define BYTE int8_t	/* Lattice chars are 8 bit */
+#define WORD uint16_t	/* Lattice unsigneds are 16 bits */
+#define LONG int32_t	/* Lattice ... */
 
 #define BITSWORD 16	/* bits per WORD, above */
 
@@ -86,10 +88,6 @@ DATE:	0 y y y y y y m m m m d d d d d
 #define FIDONET 5			/* XMODEM with diverter */
 #define IFNA 6				/* design by default */
 #define SEALINK 7			/* trademark SEA Associates */
-
-#ifndef NULL
-#define NULL 0				/* nothing */
-#endif
 
 #define MINS_HR	60			/* minutes in an hour */
 #define DAYS_WK 7			/* days in a week */

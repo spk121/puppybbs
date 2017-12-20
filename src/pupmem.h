@@ -1,6 +1,8 @@
+#pragma once
 /*
 	pup's memory usage declarations.
 */
+#include "puppy.h"
 
 extern struct _pup pup;		/* our main system file */
 extern struct _clr caller;	/* currently logged in caller */

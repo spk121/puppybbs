@@ -9,9 +9,14 @@
 #endif
 #include <ctype.h>
 #include <string.h>
-#include "puppy.h"
 #include "ascii.h"
+#include "modemio.h"
+#include "ms-asm.h"
+#include "ms-c.h"
+#include "printf.h"
+#include "puppy.h"
 #include "pupmem.h"
+#include "support.h"
 #include "xmodem.h"
 
 /*
@@ -55,6 +60,8 @@ static inline int fnc(char c);
 static void cvt_to_fcb(char *inname, char *outname);
 static void _cvt2(char *inname, char *outname, int n);
 static void xferstat(int n, char *s, ...);
+static int get_pkt();
+static void put_pkt(char c);
 
 /* Transmit one or more files. The list fn contains one or more file names;
 if explicit is true, then they should be used as is else the system path
@@ -767,4 +774,14 @@ static void xferstat(int n, char *s, ...)
 	puts(buff);
 
 	puts("\r"); if (n) puts("\n");
+}
+
+static int get_pkt()
+{
+	return 0;
+}
+
+static void put_pkt(char c)
+{
+
 }

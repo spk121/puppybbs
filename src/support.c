@@ -11,9 +11,12 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include "puppy.h"
+#include "abort.h"
 #include "ascii.h"
+#include "mdmfunc.h"
+#include "modemio.h"
 #include "pupmem.h"
+#include "puppy.h"
 #include "support.h"
 
 /*
@@ -209,7 +212,7 @@ void dumptext(int file)
 			count= read(file,buff,sizeof(buff)); /* is empty */
 		}
 		if (! count) break;			/* stop if empty file */
-		if (abort) break;			/* stop if aborted */
+		if (_abort) break;			/* stop if aborted */
 
 		c= buff[index++];			/* get a character, */
 		if (c == LF) continue;			/* ignore LFs */
