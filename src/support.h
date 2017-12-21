@@ -4,6 +4,7 @@
 char *str_date(WORD t);
 char *str_time(WORD t);
 int append(char *s);
+void logoff(int code, int disc);
 void makefname(char *d, char *s);
 int dspfile(char *filename);
 void dumptext(int file);

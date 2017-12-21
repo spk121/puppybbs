@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 uint16_t gtime();
+uint16_t gdate();
 /* bytes to long integer */
 long _ctol(char *pos);
 /* set file time */

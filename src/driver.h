@@ -29,8 +29,9 @@ uint16_t iodev = 0;		/* serial channel number */
 
 extern long millisec;		/* G.P. milliseconds */
 extern long millis2;
-extern int seconds,minutes,hours;
+extern uint16_t seconds,minutes,hours;
 
+void clr_clk();
 void set_clk();
 void init();
 void reset_clk();
