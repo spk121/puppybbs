@@ -220,7 +220,7 @@ on +++) issue ATH0 (which will disconnect the Hayes etc) */
 				printf("      Puppy cannot make the modem disconnect!\r\n");
 				printf("      Type Control-C to abort to DOS: ");
 				doscode= 1;
-				if (bdos2(6,0xff) == ETX) return;
+				if (keyhit() == ETX) return;
 			}
 		}
 	}

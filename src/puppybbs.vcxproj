@@ -118,11 +118,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="abort.c" />
+    <ClCompile Include="compat.c" />
     <ClCompile Include="edit.c" />
     <ClCompile Include="files.c" />
     <ClCompile Include="login.c" />
     <ClCompile Include="mdmfunc.c" />
     <ClCompile Include="modemio.c" />
+    <ClCompile Include="ms-asm.c" />
     <ClCompile Include="ms-c.c" />
     <ClCompile Include="msgbase.c" />
     <ClCompile Include="printf.c" />
@@ -136,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="abort.h" />
     <ClInclude Include="ascii.h" />
+    <ClInclude Include="compat.h" />
     <ClInclude Include="driver.h" />
     <ClInclude Include="edit.h" />
     <ClInclude Include="files.h" />

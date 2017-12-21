@@ -66,19 +66,35 @@ void baud(uint16_t datarate)
 	printf("in dummy func baud(%u)\n", datarate);
 }
 
+#if 0
+/* bdos() was a buffered i/o operation scheme that sent or received one byte
+ * at a time. */
+ /* Performs an MS-DOS BDOS call by placing fn in the AH register and dx in the
+ * DX register and calling the BDOS operation.  Obviously obsolete.
+ * FN 1 == translated console read
+ * FN 2 == translated console write.
+ * FN 7 == untranslated console read.
+ * FN 6 == untranslated console write
+ * 'translated' means Newline reads as CRLF
+ */
+
 int bdos(int x)
 {
-	int ret = 'x';
+	int ret = 0;
+	if (x == 7)
+		ret = _getch();
 	printf("in dummy func bdos(%d) returning %d\n", x, ret);
 	return ret;
 }
 
-int bdos2(int x, int y)
+int bdos2(int fn, int dx)
 {
 	int ret = 'x';
-	printf("in dummy func bdos(%d,%d) returning %d\n", x, y, ret);
+
+	printf("in dummy func bdos(%d,%d) returning %d\n", fn, dx, ret);
 	return ret;
 }
+#endif
 
 void lower_dtr()
 {
@@ -115,24 +131,43 @@ void reset_clk()
 	printf("in dummy func reset_clk()\n");
 }
 
-/* Get all available MS-DOS memory*/
-void allmem()
+static long mempool_size = 1024 * 1024;
+static long mempool_alloc;
+
+/* allmem() allocated all available memory as a pool to be used by the
+ * special allocator getmem(). Returned -1 on failure, 0 on success. */
+int allmem()
 {
-	printf ("in dummy func allmem()\n");
+	int ret = 0;
+	mempool_alloc = mempool_size;
+	printf ("in dummy func allmem() returning %d\n", ret);
+	return ret;
 }
 
+/* sizmem() returned the number of unallocated bytes in the memory pool
+ * allocated by allmem() and used by getmem(). */
 long sizmem()
 {
-	long ret = 1024 * 1024;
-	printf("in dummy func sizmen() returning %ld\n", ret);
-	return ret;
+	printf("in dummy func sizmen() returning %ld\n", mempool_alloc);
+	return mempool_alloc;
 }
 
-char *getmem()
+/* getmem() returned a memory block from the special memory pool created by 
+ * allmem(), or NULL on failure */
+char *getmem(unsigned n)
 {
-	char *ret = NULL;
-	printf("in dummy func sizmen() returning %ld\n", ret);
-	return ret;
+	if (mempool_alloc >= n)
+	{
+		mempool_alloc -= n;
+		char *ret = malloc(n);
+		printf("in dummy func getmem() returning buffer with %ld bytes\n", n);
+		return ret;
+	}
+	else
+	{
+		printf("in dummy func getmem() returning NULL\n");
+		return NULL;
+	}
 }
 
 int xaccess(const char *filename, int how)

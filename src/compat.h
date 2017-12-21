@@ -15,8 +15,8 @@ int _mbusy();
 void _mconout(char c);
 int _cd();
 int _ioctl(int a, int b, int c, int d);
-int bdos(int x);
-int bdos2(int x, int y);
+// int bdos(int fn);
+// int bdos2(int fn, int dx);
 void baud(uint16_t datarate);
 void lower_dtr();
 void raise_dtr();
@@ -28,9 +28,9 @@ void clr_clk();
 void set_clk();
 void reset_clk();
 
-void allmem();
+int allmem();
 long sizmem();	/* MSDOS */
-char *getmem();	/* MSDOS */
+char *getmem(unsigned n);	/* MSDOS */
 
 #ifdef _WIN32
 #define XS_IREAD (_S_IREAD)

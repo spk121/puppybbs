@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 #include "compat.h"
 #include "ms-asm.h"
 #include "ms-c.h"
@@ -175,20 +176,24 @@ void close_up()
 
 int lconin()
 {
-	return(bdos(7));
+	//return(bdos(7));
+	return _getch();
 }
 /* If a key is hit, return the key, else 0. */
 
 char keyhit()
 {
-	char c;
-	c= bdos2(6,0xff);
-	return(c);
+	if (_kbhit())
+		return _getch();
+	else
+		return 0;
 }
 
 /* Type a character, dont change cursor position. */
 
 void lconout(char c)
 {
-	bdos2(6,c);
+	// FIXME: this changes cursor position
+	putchar(c);
+	// bdos2(6,c);
 }
