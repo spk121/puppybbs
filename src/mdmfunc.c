@@ -135,7 +135,9 @@ static int sendwt(char *s)
 {
 	int n;
 	atp(s);				/* send the string, */
-	for (millisec= 0L; millisec < 2000L; ) {
+	timer1_reset();
+#if 0
+	while (timer1_get() < 2000L) {
 		n= chk_modem();		/* check for result, */
 		if (n >= 0) {		/* stop if we get one */
 			delay(50);
@@ -143,6 +145,8 @@ static int sendwt(char *s)
 		}
 	}
 	return(n);
+#endif
+	return 1;
 }
 
 /* Send a command sequence to the modem, */
@@ -266,7 +270,8 @@ int answer()
 		case 1:				/* dial sucessful */
 			cd_flag= 0;		/* wait for CD */
 			mdmstate= 0;		/* (assume not connected) */
-			for (millisec= 0L; millisec < 20000L;) {
+			timer1_reset();
+			while (timer1_get() < 20000L) {
 				if (cd()) {	/* if we find it, */
 					delay(200); /* delay for modem/telco */
 					mdmstate= 1; /* flag the connection */

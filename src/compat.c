@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/timeb.h>
 #else
 #include <unistd.h>
 #endif
@@ -12,8 +13,6 @@
 #include "compat.h"
 #include "pupmem.h"
 
-LONG millisec;		/* MSDOS driver: G.P. milliseconds */
-LONG millis2;		/* MSDOS driver */
 WORD seconds, minutes, hours; /* MSDOS driver */
 
 int _mbusy()
@@ -168,6 +167,34 @@ char *getmem(unsigned n)
 		printf("in dummy func getmem() returning NULL\n");
 		return NULL;
 	}
+}
+
+/* These are replacments for the MS-DOS millisecond timers. */
+struct _timeb timer1;
+struct _timeb timer2;
+
+void timer1_reset()
+{
+	_ftime(&timer1);
+}
+
+long timer1_get()
+{
+	struct _timeb now;
+	_ftime(&now);
+	return now.time * 1000 + now.millitm - timer1.time * 1000 - timer1.millitm;
+}
+
+void timer2_reset()
+{
+	_ftime(&timer2);
+}
+
+long timer2_get()
+{
+	struct _timeb now;
+	_ftime(&now);
+	return now.time * 1000 + now.millitm - timer2.time * 1000 - timer2.millitm;
 }
 
 int xaccess(const char *filename, int how)

@@ -27,8 +27,6 @@ const static char graph_off[80] = "";	/* disable graphics */
 
 /* Time stuff */
 
-extern long millisec;		/* G.P. milliseconds */
-extern long millis2;
 extern uint16_t seconds,minutes,hours;
 
 

@@ -46,7 +46,5 @@ extern WORD iodev;		/* MSDOS driver: serial channel number */
 extern char *text;		/* work buffer */
 extern int textsize;		/* and its size */
 
-extern LONG millisec;		/* MSDOS driver: G.P. milliseconds */
-extern LONG millis2;		/* MSDOS driver */
 extern WORD seconds,minutes,hours; /* MSDOS driver */
 

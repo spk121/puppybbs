@@ -114,6 +114,9 @@ int main(int argc, char **argv)
 	set_clk();				/* install clock */
 	init();					/* start up hardware, */
 
+	timer1_reset();
+	timer2_reset();
+
 	evtmsg= 0;				/* no event warning yet */
 	rdymsg= 0;				/* no ready message yet */
 	mdmmsg= 0;				/* no modem init */

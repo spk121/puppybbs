@@ -317,14 +317,14 @@ int mconin()
 {
 	FLAG warned;
 
-	millisec= 0L;				/* clear the timer, */
+	timer1_reset();
 	warned= 0;				/* not warned yet */
 	while (! mconstat()) {
-		if ((millisec > EIGHTMIN) && (!warned)) {
+		if ((timer1_get() > EIGHTMIN) && (!warned)) {
 			mputs("\r\nPup says: \07\"I'll hang up on you if you sit idle too long!\"\r\n");
 			++warned;
 		}
-		if (millisec > TENMIN) {
+		if (timer1_get() > TENMIN) {
 			mputs("\r\nPup says: \"You were warned!\"\r\n");
 			logoff(0,1);
 		}
@@ -480,8 +480,8 @@ int modin(unsigned n)
 
 	dly= n * 10L;			/* time, in milliseconds */
 
-	millis2= 0L;			/* clear the ticker, */
-	while (millis2 < dly) {
+	timer2_reset();
+	while (timer2_get() < dly) {
 		carrierchk();		/* watch disconnect, */
 		if (_mconstat()) 	/* if a char avail, return it. */
 			return(_mconin() & 0xff);
@@ -496,8 +496,8 @@ void delay(int n)
 	long dly;
 
 	dly= n * 10L;
-	millisec= 0L;
-	while (millisec < dly);
+	timer1_reset();
+	while (timer1_get() < dly);
 }
 
 /* Logoff if carrier is lost. */
