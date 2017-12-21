@@ -19,11 +19,41 @@ WORD seconds, minutes, hours; /* MSDOS driver */
  * modem stuff and replace it with console stuff.  For the time being, I'm
  * going to make a fake modem emulator to funnel these requests to the
  * console.
+ *
+ * Commands       Response
+ * ATX1E0V0M0S0=0 X1: Add connection speed to result codes (CONNECT 1200)
+ *                E0: no echo
+ *                V0: numeric result codes
+ *                M0: speaker off
+ *                S0=0: Set current register to be S0.
+ * AT             OK
+ * ATDT           RING
+ * ATA            CONNECT  + raise DCD signal
+ * CONNECT        <flip to data mode>
+ * ATH            NO CARRIER + drop DCD signal
+ * +++            OK <escape from data mode>
+
+ * Numeric result codes
+   0: OK
+   1: connect at 300
+   5: connect at 1200
+   9: connect at 600
+   10: connect at 2400
+   13: connect at 9600
+   2: RING
+   3: NO CARRIER
+   6: NO DIALTONE
+   7: BUSY
+   8: NO ANSWER
+ *
  */
 struct _fakemodem
 {
 	int connected;
 	unsigned baud;
+	int dcd;         // Data carrier detect
+	char inbuf[80];  // Contains current line of input text.
+	int inlen;       // Characters in inbuf
 };
 
 struct _fakemodem fakemodem;
