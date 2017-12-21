@@ -124,7 +124,7 @@ struct _msg *newmsg();
 
 /* These are elsewhere */
 
-#ifndef WIN32
+#ifndef _WIN32
 long lseek();
 #endif
 char *getmem();
