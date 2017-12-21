@@ -5,6 +5,7 @@ int getinfo(char *name, int n, struct _fileinfo *fileinfo);
 char keyhit();
 
 char *strfnd(char *string, char *pattern);
+void lconout(char c);
 
 /* Mising functions */
 void allmem();

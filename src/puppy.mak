@@ -7,7 +7,7 @@ all: set-pup.exe puppy.exe
 .c.obj:  
   $(cc) $(cdebug) $(cflags) $(cvars) $*.c  
 
-puppy.exe: pup.obj pupmain.obj quote.obj sched.obj support.obj xmodem.obj 
+puppy.exe: printf.obj pup.obj pupmain.obj quote.obj sched.obj support.obj xmodem.obj 
   $(link) $(ldebug) $(conlflags) -out:puppy.exe $** $(conlibs)
 
 set-pup.exe: set-pup.obj

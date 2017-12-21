@@ -1,4 +1,7 @@
 #pragma once
+void puts(char *s); 
+
 void printf(char *fmt, ...);
-void puts(char *s);
+void sprintf(char *s, char *f, ...);
+
 void _spr(char *line, char **fmt);
