@@ -1,12 +1,13 @@
 #pragma once
 #include "puppy.h"
-int badname(char *name);
-int getinfo(char *name, int n, struct _fileinfo *fileinfo);
-char keyhit();
 
 char *strfnd(char *string, char *pattern);
+int getinfo(char *name, int n, struct _fileinfo *fileinfo);
+int badname(char *name);
+void close_up();
+int lconin();
+char keyhit();
 void lconout(char c);
 
 /* Mising functions */
 void allmem();
-void close_up();
