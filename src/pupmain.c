@@ -1,15 +1,7 @@
-#ifdef _WIN32
-#define _CRT_SECURE_NO_WARNINGS
-#include <io.h>
-#define open(FN,FLAG) (_open((FN),(FLAG)))
-#define close(H) (_close((H)))
-#define read(H,BUF,SIZ) (_read((H),(BUF),(SIZ)))
-#define creat(FN,P) (_creat((FN),(P)))
-#define write(H,BUF,SIZ) (_write((H),(BUF),(SIZ)))
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include "ascii.h"
+#include "compat.h"
 #include "driver.h"		/* MSDOS */
 #include "mdmfunc.h"
 #include "ms-c.h"
@@ -53,16 +45,15 @@ WORD linkrate;		/* baud rate to/from modem */
 WORD datarate;		/* baud rate to/from caller */
 FLAG cd_flag;		/* true == ignore CD line */
 
-extern WORD cd_bit;	/* MSDOS driver: bit to test for Carrier Detect, */
-extern WORD iodev;	/* MSDOS driver: serial channel number */	
+WORD cd_bit;	/* MSDOS driver: bit to test for Carrier Detect, */
+WORD iodev;	/* MSDOS driver: serial channel number */	
 
 /* Local text buffer */
 
 char *text;		/* work buffer */
 unsigned textsize;	/* and its size */
 
-extern long sizmem();	/* MSDOS */
-extern char *getmem();	/* MSDOS */
+
 
 /*************************************************************
 
@@ -89,13 +80,13 @@ int main(int argc, char **argv)
 	printf("(k) all rights reversed\r\n");
 	test= 0;				/* not test mode */
 
-	i= open("puppy.sys",0);			/* load the system file */
+	i= xopen2("puppy.sys",0);			/* load the system file */
 	if (i == -1) {
 		printf("Can't find PUPPY.SYS\r\n");
 		exit(1);
 	}
-	read(i,&pup,sizeof(struct _pup));	/* read it in, */
-	close(i);
+	xread(i,&pup,sizeof(struct _pup));	/* read it in, */
+	xclose(i);
 
 	iodev= pup.iodev;			/* MSDOS stuff the drivers */
 	cd_bit= pup.cd_bit;			/* MSDOS with setup info */

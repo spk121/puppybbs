@@ -1,7 +1,7 @@
 #pragma once
-void puts(char *s); 
+void xputs(char *s); 
 
-void printf(char *fmt, ...);
-void sprintf(char *s, char *f, ...);
+void xprintf(char *fmt, ...);
+void xsprintf(char *s, char *f, ...);
 
 void _spr(char *line, char **fmt);

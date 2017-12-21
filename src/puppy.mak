@@ -17,10 +17,10 @@ info:
 .c.obj:  
   $(cc) $(cdebug) $(cflags) $(cvarsmt) $*.c  
 
-puppy.exe: edit.obj files.obj login.obj mdmfunc.obj ms-c.obj msgbase.obj printf.obj pup.obj pupmain.obj quote.obj sched.obj support.obj xmodem.obj 
+puppy.exe: abort.obj compat.obj edit.obj files.obj login.obj mdmfunc.obj modemio.obj ms-asm.obj ms-c.obj msgbase.obj printf.obj pup.obj pupmain.obj quote.obj sched.obj support.obj xmodem.obj 
   $(link) $(ldebug) $(conlflags) -out:puppy.exe $** $(conlibsmt)
 
-set-pup.exe: set-pup.obj
+set-pup.exe: set-pup.obj compat.obj
   $(link) $(ldebug) $(conlflags) -out:set-pup.exe $** $(conlibsmt)
 
 # Clean up everything

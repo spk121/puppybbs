@@ -1,19 +1,4 @@
-#ifdef WIN32
 #define _CRT_SECURE_NO_WARNINGS
-#include <io.h>
-#define open2(FN,FLAG) (_open((FN),(FLAG)))
-#define open(FN,FLAG,MODE) (_open((FN),(FLAG),(MODE)))
-#define close(H) (_close((H)))
-#define read(H,BUF,SIZ) (_read((H),(BUF),(SIZ)))
-#define creat(FN,P) (_creat((FN),(P)))
-#define write(H,BUF,SIZ) (_write((H),(BUF),(SIZ)))
-#define lseek(H,X,Y) (_lseek((H),(X),(Y)))
-#else
-# define open2(FN,FLAG) (open((FN),(FLAG)))
-# define _O_RDWR O_RDWR
-#endif
-# include <fcntl.h>
-# include <sys/stat.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -66,7 +51,7 @@ int main(int argc, char **argv)
 	printf("San Francisco CA 94107 USA\r\n");
 	printf("(k) all rights reversed\r\n");
 
-	sysfile= open2("PUPPY.SYS", _O_RDWR);		/* open it for read/write */
+	sysfile= xopen2("PUPPY.SYS", _O_RDWR);		/* open it for read/write */
 	if (sysfile == -1) {
 		printf(" * File \"PUPPY.SYS\" doesn't exist, making a new one\r\n");
 		sysfile= xcreat("PUPPY.SYS", XS_IREAD | XS_IWRITE);	/* make a new one, */
@@ -83,7 +68,7 @@ int main(int argc, char **argv)
 
 	setdefaults();				/* fill in those blanks */
 	finit("PUP.SET");
-	lseek(sysfile,0L,0);
+	xseek(sysfile,0L,0);
 	xwrite(sysfile,&pup,sizeof(struct _pup));
 	xclose(sysfile);
 
@@ -122,7 +107,7 @@ static void setmsg()
 	}
 	f= xopen3("PUPPY.IDX", XO_CREAT, XS_IREAD | XS_IWRITE);
 	if (f == -1) {
-		close(f);
+		xclose(f);
 		printf("The message base can't be opened\r\n");
 		return;
 	}
@@ -156,7 +141,7 @@ static void fffill(char *fname, /* filename */
 		}
 		count -= n;
 	}
-	close(f);
+	xclose(f);
 }
 /* Set the defaults to put into PUPPY.SYS. */
 
@@ -244,7 +229,7 @@ static int finit(char *fn)
 		printf(" * Can't find Startup File %s\r\n", fn);
 		return(0);
 	}
-	f= open2(fn, _O_RDWR);
+	f= xopen2(fn, _O_RDWR);
 	if (f == -1) {
 		printf(" * Can't open Startup File %s\r\n", fn);
 		return(0);
@@ -295,7 +280,7 @@ static int finit(char *fn)
 			err= 1;
 		}
 	}
-	close(f);
+	xclose(f);
 	return(1);
 }
 /* Complain about this line. */

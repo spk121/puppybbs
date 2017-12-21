@@ -1,15 +1,8 @@
-#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
-#include <io.h>
-#define open(FN,FLAG) (_open((FN),(FLAG)))
-#define close(H) (_close((H)))
-#define read(H,BUF,SIZ) (_read((H),(BUF),(SIZ)))
-#define creat(FN,P) (_creat((FN),(P)))
-#define write(H,BUF,SIZ) (_write((H),(BUF),(SIZ)))
-#endif
 #include <ctype.h>
 #include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "modemio.h"
 #include "ms-asm.h"
 #include "ms-c.h"
@@ -98,13 +91,13 @@ int transmit(char *fn, /* filename for XMODEM */
 			if (dofn) error= sendfname(fileinfo.name); else error= OK;
 			if (error != OK) break;		/* ERROR or ABORT */
 
-			f= open(fname,0);		/* open it, */
+			f= xopen2(fname,0);		/* open it, */
 			if (f == -1) {
 				xferstat(2,"Can't open \"%s\"",fname);
 				continue;
 			}
 			error= sendfile(f,dotb,&fileinfo);
-			close(f);			/* close the file, */
+			xclose(f);			/* close the file, */
 			if (error != OK) break;		/* check errors */
 			if (strlen(fname) < listlen) {	/* keep a list */
 				strcat(namelist,fname);
@@ -179,20 +172,20 @@ int receive(char *fn, /* fn is filename for XMODEM */
 		strcat(fname,name);			/* filename */
 		xferstat(1,"File: %s",fname);		/* display it */
 
-		f= open(fname,0);			/* make sure it does NOT */
+		f= xopen2(fname,0);			/* make sure it does NOT */
 		if (f != -1) {				/* exist */
-			close(f);
+			xclose(f);
 			xferstat(2,"File already exists!");
 			oops= ERROR;
 			break;
 		}
-		f= creat(fname,2);			/* create it, */
+		f= xcreat(fname,2);			/* create it, */
 		if (f == -1) {
 			xferstat(2,"Cannot create file");
 			break;
 		}
 		oops= getfile(f);			/* fill it, */
-		close(f);				/* close it, */
+		xclose(f);				/* close it, */
 
 		if (oops != OK) break;			/* oops, ABORT or EOT */
 		if (strlen(fname) < listlen) {		/* keep a list */
@@ -579,7 +572,7 @@ static int get_buff(int f, /* file handle, or dummy */
 		if (i == -1) break;	/* stop if "EOF" */
 		*buff++= i;		/* stuff it */
 
-	} else n= read(f,buff,n);	/* else from a disk file */
+	} else n= xread(f,buff,n);	/* else from a disk file */
 
 	return(n);
 }
@@ -594,7 +587,7 @@ static int put_buff(int f, /* file handle, or dummy */
 	int i;
 
 	if (diverter) while (n--) put_pkt(*buff++);	/* to the unpacketer, */
-	else n= write(f,buff,n);			/* or to the file */
+	else n= xwrite(f,buff,n);			/* or to the file */
 	return(n);					/* say what we did */
 }
 

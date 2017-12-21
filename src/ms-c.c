@@ -1,7 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
-#include <io.h>
 #include <string.h>
+#include "compat.h"
+#include "ms-asm.h"
 #include "ms-c.h"
 #include "puppy.h"
 
@@ -120,13 +121,13 @@ int getinfo(char *name,  /* filename, */
 	int n,               /* interation counter */
 	struct _fileinfo *fileinfo)  /* returned file information */
 {
-	fileinfo-> xfbuf.s_attrib= 0;		/* set search attribute */
-	if (!_find(name,n,&fileinfo->xfbuf))	/* do the MSDOS thing, */
+	fileinfo->xfbuf.s_attrib= 0;		/* set search attribute */
+	if (!_find(name,n,(struct _xfbuf *)&fileinfo->xfbuf))	/* do the MSDOS thing, */
 		return(0);			/* no matches */
 
-	strcpy(fileinfo-> name,fileinfo-> xfbuf.name);
+	strcpy(fileinfo->name,fileinfo->xfbuf.name);
 
-	fileinfo->size= fileinfo-> xfbuf.fsize; /* copy in the basic info */
+	fileinfo->size= fileinfo->xfbuf.fsize; /* copy in the basic info */
 #if 0
 	fileinfo->time = fileinfo-> xfbuf.date & 0x0f;
 	fileinfo->time |= ((fileinfo-> xfbuf.date >> 5) & 0x0f) << 5;
@@ -150,10 +151,10 @@ int badname(char *name)
 	int i,f;
 
 	if (*name == '.') return(1);	/* directory */
-	f= open(name,2);		/* if we can't open it */
+	f= xopen2(name,2);		/* if we can't open it */
 	if (f == -1) return(0);		/* it aint there */
 	i= _ioctl(0,f,0,0);		/* see if device */
-	close(f);			/* close handle */
+	xclose(f);			/* close handle */
 	if (i == -1) return(0);		/* some error */
 	return(i & 0x80);		/* 0x80 is the 'device' bit */
 }
@@ -167,7 +168,7 @@ void close_up()
 	int i;
 
 	for (i= 6; i < 20; i++) {
-		close(i);
+		xclose(i);
 	}
 }
 /* get a character from the console. */
@@ -181,7 +182,7 @@ int lconin()
 char keyhit()
 {
 	char c;
-	c= bdos(6,0xff);
+	c= bdos2(6,0xff);
 	return(c);
 }
 
@@ -189,5 +190,5 @@ char keyhit()
 
 void lconout(char c)
 {
-	bdos(6,c);
+	bdos2(6,c);
 }

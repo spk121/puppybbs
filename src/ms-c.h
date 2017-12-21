@@ -9,5 +9,3 @@ int lconin();
 char keyhit();
 void lconout(char c);
 
-/* Mising functions */
-void allmem();

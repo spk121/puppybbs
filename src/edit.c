@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "edit.h"
 #include "modemio.h"
 #include "puppy.h"

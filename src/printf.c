@@ -67,13 +67,13 @@ static int _uspr(char buff[], unsigned *buffi, long n, int base);
 
 /* Write a string to the console. */
 
-void puts(char *s)
+void xputs(char *s)
 {
 	while (*s) lconout(*s++);
 }
 /* Replacements for the overly large Lattice ones. */
 
-void printf(char *f, ...)
+void xprintf(char *f, ...)
 {
 	char buf[MAXSTR],*p;
 
@@ -81,7 +81,7 @@ void printf(char *f, ...)
 	puts(buf);
 }
 
-void sprintf(char *s, char *f, ...)
+void xsprintf(char *s, char *f, ...)
 {
 	_spr(s,&f);
 }

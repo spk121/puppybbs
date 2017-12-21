@@ -39,7 +39,7 @@ extern FLAG cd_flag;		/* true == ignore CD line */
 extern WORD linkrate;		/* baud rate to/from modem */
 extern WORD datarate;		/* baud rate to/from caller */
 extern WORD cd_bit;		/* MSDOS driver: bit to test for Carrier Detect, */
-extern WORD iodev;		/* MSDOS driver: serial channel number */	
+extern WORD iodev;		/* MSDOS driver: serial channel number */
 
 /* Local text buffer */
 

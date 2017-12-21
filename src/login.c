@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <io.h>
 #include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "login.h"
 #include "ms-asm.h"
 #include "modemio.h"
@@ -166,7 +166,7 @@ void stuff()
 void openclr()
 {
 
-	clrfile= open("puppy.clr",2);
+	clrfile= xopen2("puppy.clr",2);
 	if (clrfile == -1) printf("THE CALLER FILE IS MISSING!\r\n");
 	clrno= -1;
 }
@@ -177,9 +177,9 @@ void closeclr()
 {
 	if (clrno) {
 		posclr(clrno);				/* position there, */
-		write(clrfile,&caller,sizeof(struct _clr)); /* write it, */
+		xwrite(clrfile,&caller,sizeof(struct _clr)); /* write it, */
 	}
-	if (clrfile != -1) close(clrfile);		/* close the file */
+	if (clrfile != -1) xclose(clrfile);		/* close the file */
 	clrfile= -1;
 }
 
@@ -188,7 +188,7 @@ void closeclr()
 static void getclr(int n)
 {
 	posclr(n);
-	read(clrfile,&caller,sizeof(struct _clr));
+	xread(clrfile,&caller,sizeof(struct _clr));
 }
 
 /* Position to caller record. */
@@ -198,7 +198,7 @@ static void posclr(int n)
 	long o;
 	o= 0L + n;
 	o *= sizeof(struct _clr);
-	lseek(clrfile,o,0);
+	xseek(clrfile,o,0);
 }
 
 /* Return the oldest date of all the specified topics from the caller record. */

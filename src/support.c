@@ -1,18 +1,10 @@
-#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
-#include <io.h>
-#define open(FN,FLAG) (_open((FN),(FLAG)))
-#define close(H) (_close((H)))
-#define read(H,BUF,SIZ) (_read((H),(BUF),(SIZ)))
-#define creat(FN,P) (_creat((FN),(P)))
-#define write(H,BUF,SIZ) (_write((H),(BUF),(SIZ)))
-#define lseek(H,X,Y) (_lseek((H),(X),(Y)))
-#endif
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include "abort.h"
 #include "ascii.h"
+#include "compat.h"
 #include "mdmfunc.h"
 #include "modemio.h"
 #include "pupmem.h"
@@ -153,9 +145,9 @@ int append(char *s)
 	int h;
 	char c;
 
-	h= open(s,2);				/* open or create the */
-	if (h == -1) h= creat(s,2);		/* file, if opened OK */
-	else lseek(h,0L,2);			/* seek to the end */
+	h= xopen2(s,2);				/* open or create the */
+	if (h == -1) h= xcreat(s,2);		/* file, if opened OK */
+	else xseek(h,0L,2);			/* seek to the end */
 	return(h);				/* handle or error */
 }
 
@@ -188,10 +180,10 @@ int dspfile(char *filename)
 {
 	int f;
 
-	f= open(filename,0);
+	f= xopen2(filename,0);
 	if (f == -1) return(0);
 	dumptext(f);
-	close(f);
+	xclose(f);
 	return(1);
 }
 
@@ -209,7 +201,7 @@ void dumptext(int file)
 	while (1) {
 		if (index >= count) {			/* read some if */
 			index= 0;			/* the local buffer */
-			count= read(file,buff,sizeof(buff)); /* is empty */
+			count= xread(file,buff,sizeof(buff)); /* is empty */
 		}
 		if (! count) break;			/* stop if empty file */
 		if (_abort) break;			/* stop if aborted */
@@ -235,13 +227,13 @@ void putsys()
 {
 	int f;
 
-	f= open("puppy.sys",2);
+	f= xopen2("puppy.sys",2);
 	if (f == -1) {
 		printf("Can't open PUPPY.SYS!\r\n");
 		return;
 	}
-	write(f,&pup,sizeof(struct _pup));
-	close(f);
+	xwrite(f,&pup,sizeof(struct _pup));
+	xclose(f);
 }
 
 /* Read a line of text from the file, null terminate it.  Function returns
@@ -256,7 +248,7 @@ char rline(int file, char *buf, int len)
 	i= 0; notempty= 0;
 	--len;						/* compensate for added NUL */
 	while (i < len) {
-		if (! read(file,&c,1)) break;		/* stop if empty */
+		if (! xread(file,&c,1)) break;		/* stop if empty */
 		if (c == 0x1a) continue;		/* totally ignore ^Z, */
 		notempty= 1;				/* not empty */
 		if (c == '\r') continue;		/* skip CR, */
@@ -380,7 +372,7 @@ void stoupper(char *s)
 
 /* atoi() function missing from Lattice C. From Kernighan and Richie. */
 
-int atoi(char *s)
+int xatoi(char *s)
 {
 	int n;
 	n= 0;

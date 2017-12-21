@@ -18,5 +18,5 @@ void cpyarg(char *to, char *from);
 char *strip_path(char *out, char *in);
 void stolower(char *s);
 void stoupper(char *s);
-int atoi(char *s);
+int xatoi(char *s);
 int delim(char c);

@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "modemio.h"
 #include "ms-c.h"
 #include "printf.h"

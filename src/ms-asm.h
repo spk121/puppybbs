@@ -11,3 +11,4 @@ void clrcrc();
 void updcrc(char c);
 unsigned fincrc();
 int chkcrc();
+int _find(char *pathname, int n, struct _xfbuf *xfbuf);

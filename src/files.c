@@ -1,7 +1,7 @@
 #include <ctype.h>
-#include <io.h>
 #include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "files.h"
 #include "modemio.h"
 #include "ms-c.h"
@@ -34,7 +34,7 @@ static int listfile()
 	int files;			/* how many we found */
 
 	makefname(name,"files.pup");
-	file= open(name,0);
+	file= xopen2(name,0);
 	if (file == -1) {
 		mprintf("\r\nSORRY: No Files\r\n");
 		return(0);
@@ -63,7 +63,7 @@ static int listfile()
 		mputs("\r\n");
 		++files;
 	}
-	close(file);
+	xclose(file);
 	return(files);
 }
 
@@ -124,9 +124,9 @@ void upload()
 
 	if (!okname(name)) return;		/* device names, etc */
 	makefname(buff,name);			/* make full filename */
-	f= open(buff,0);			/* make sure it does NOT */
+	f= xopen2(buff,0);			/* make sure it does NOT */
 	if (f != -1) {				/* exist yet */
-		close(f);
+		xclose(f);
 		mprintf("SORRY: \"%s\" already exists!\r\n",name);
 		return;
 	}
@@ -147,12 +147,12 @@ void upload()
 		mputs("OOPS: Cant open/create the file list\r\n");
 		return;
 	}
-	write(f,name,strlen(name));		/* write the file name, */
-	write(f," ",1);				/* a seperator */
+	xwrite(f,name,strlen(name));		/* write the file name, */
+	xwrite(f," ",1);				/* a seperator */
 	input("Describe: ",buff,40);		/* get the description, */
-	write(f,buff,strlen(buff));		/* write that, */
-	write(f,"\r\n",2);			/* new line */
-	close(f);
+	xwrite(f,buff,strlen(buff));		/* write that, */
+	xwrite(f,"\r\n",2);			/* new line */
+	xclose(f);
 }
 
 /* Perform checks on the passed filename for downloading. Check time limits,

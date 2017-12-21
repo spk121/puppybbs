@@ -1,5 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
+#include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "driver.h"
 #include "mdmfunc.h"
 #include "modemio.h"
@@ -217,7 +220,7 @@ on +++) issue ATH0 (which will disconnect the Hayes etc) */
 				printf("      Puppy cannot make the modem disconnect!\r\n");
 				printf("      Type Control-C to abort to DOS: ");
 				doscode= 1;
-				if (bdos(6,0xff) == ETX) return;
+				if (bdos2(6,0xff) == ETX) return;
 			}
 		}
 	}

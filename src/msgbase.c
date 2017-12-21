@@ -1,8 +1,6 @@
-#ifdef _WIN32
-#include <io.h>
-#endif
 #include <string.h>
 #include "ascii.h"
+#include "compat.h"
 #include "msgbase.h"
 #include "modemio.h"
 #include "printf.h"
@@ -97,12 +95,12 @@ static void writehdr(int n);
 
 void openmsg()
 {
-	msgfile= open("puppy.idx",2);		/* open the msg base */
-	txtfile= open("puppy.dat",2);
+	msgfile= xopen2("puppy.idx",2);		/* open the msg base */
+	txtfile= xopen2("puppy.dat",2);
 	if ((msgfile < 0) || (txtfile < 0)) {
 		printf("Message base file(s) missing!\r\n");
 
-	} else read(msgfile,msg,pup.messages * sizeof(struct _msg));
+	} else xread(msgfile,msg,pup.messages * sizeof(struct _msg));
 }
 
 /* Close the message base. */
@@ -110,8 +108,8 @@ void openmsg()
 void closemsg()
 {
 
-	if (msgfile != -1) close(msgfile);
-	if (txtfile != -1) close(txtfile);
+	if (msgfile != -1) xclose(msgfile);
+	if (txtfile != -1) xclose(txtfile);
 	msgfile= txtfile= -1;
 }
 
@@ -159,7 +157,7 @@ void listmsg(int n)
 
 	l= 0L + pup.msgsize;
 	l *= (long) recd(n);
-	lseek(txtfile,l,0);
+	xseek(txtfile,l,0);
 	dumptext(txtfile);
 }
 
@@ -257,17 +255,17 @@ void savemsg(int lines)
 
 	o= 0L + pup.top;
 	o *= pup.msgsize;
-	lseek(txtfile,o,0);
+	xseek(txtfile,o,0);
 	for (n= i= 0; i < lines; i++) {
 		cp= &text[i * caller.cols];	/* write each line of text */
-		write(txtfile,cp,strlen(cp));
+		xwrite(txtfile,cp,strlen(cp));
 		n += strlen(cp);		/* bozo check: dont exceed max */
 		if (n >= pup.msgsize - 1) break;/* plus room for a terminator */
 	}
 
 	n= pup.msgsize - n;			/* amt we need to fill out msg */
 	cp= text; for (i= n; i--;) *cp++= SUB;	/* fill with ^Zs */
-	write(txtfile,text,n);			/* pad it out */
+	xwrite(txtfile,text,n);			/* pad it out */
 }
 
 /* Write out the specified message header record. */
@@ -277,8 +275,8 @@ static void writehdr(int n)
 	long o;
 	o= 0L + n;
 	o *= sizeof(struct _msg);
-	lseek(msgfile,o,0);
-	write(msgfile,&msg[n],sizeof(struct _msg));
+	xseek(msgfile,o,0);
+	xwrite(msgfile,&msg[n],sizeof(struct _msg));
 }
 
 /* Load message body #n into the text buffer. */
@@ -289,6 +287,6 @@ void loadmsg(int n)
 
 	o= 0L + recd(n);
 	o *= pup.msgsize;
-	lseek(txtfile,o,0);
-	read(txtfile,text,pup.msgsize);
+	xseek(txtfile,o,0);
+	xread(txtfile,text,pup.msgsize);
 }
