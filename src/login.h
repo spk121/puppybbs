@@ -1,9 +1,11 @@
 #pragma once
 #include "puppy.h"
-void closeclr();
 void login();
-void openclr();
+void closeclr();
 void setscreen();
 void stuff();
-void updclr(int msgnbr, WORD t);
+void openclr();
+void closeclr();
 WORD oldest(WORD d);
+void updclr(int msgnbr, WORD t);
+
