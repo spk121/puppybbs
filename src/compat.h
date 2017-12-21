@@ -37,6 +37,11 @@ long timer1_get();
 void timer2_reset();
 long timer2_get();
 
+void fakemodem_baud_set(unsigned b);
+void fakemodem_disconnect();
+void fakemodem_chk(const char *str);
+void fakemodem_answer();
+int fakemodem_connect_get();
 
 #ifdef _WIN32
 #define XS_IREAD (_S_IREAD)

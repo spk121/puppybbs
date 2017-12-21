@@ -98,6 +98,7 @@ returns a pointer to the TSYNC.
 
 */
 
+
 static char line_buff[SS] = "";		/* command line buffer */
 static char *_nargp = line_buff;	/* pointer into it */
 

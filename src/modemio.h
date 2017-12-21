@@ -20,12 +20,3 @@ int modin(unsigned n);
 void delay(int n);
 int cd();
 void flush(int n);
-
-
-
-
-
-
-
-
-

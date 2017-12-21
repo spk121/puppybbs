@@ -175,6 +175,13 @@ get upset. Then DTR is raised. */
 
 void discon()
 {
+	fakemodem_disconnect();
+	setbaud(pup.maxbaud);			/* set the max. data rate */
+	cd_flag = 1;				/* ignore DTR */
+	modem_chk();				/* check if modem is dead */
+	mdmstate = 0;				/* modem is now idle */
+	cd_flag = 0;
+#if 0
 	int i;
 
 	limit= 0;				/* no time limit, we check explicitly */
@@ -237,11 +244,14 @@ the modem is ready before continuing. */
 	modem_chk();				/* check if modem is dead */
 	mdmstate= 0;				/* modem is now idle */
 	cd_flag= 0;
+#endif
 }
 /* Issue AT commands a few times and try to get the modems attention. */
 
 static void modem_chk()
 {
+	fakemodem_chk("AT\r");
+#if 0
 	int i;
 
 	cd_flag= 1;
@@ -249,6 +259,7 @@ static void modem_chk()
 		if (sendwt("AT\r") >= 0) return;
 	}
 	printf("Pup says: \"Modem not responding!\"\r\n");
+#endif
 }
 
 /* Poll the modem looking for activity; returns a code indicating whats
@@ -258,6 +269,9 @@ RING was received, and ATA issued, and we're waiting for connect/fail.
 
 int answer()
 {
+	fakemodem_answer();
+	return 1;
+#if 0
 	int n;
 
 	cd_flag= 0;				/* watch true carrier */
@@ -297,6 +311,7 @@ int answer()
 			break;
 	}
 	return(mdmstate);			/* say what it was */
+#endif
 }
 
 /* Given a result code from the modem, return 1 if connected OK and
@@ -363,7 +378,11 @@ special cased in dial(), and incoming RING is special cased in answer(). */
 	if (n == 1) {
 		setbaud(r);			/* set baud rate, */
 		flush(20);			/* flush trash */
+#if 0
 		sprintf(mdmresult,"Connected at %,d%s",datarate,s);
+#else
+		sprintf(mdmresult, "Connected at %d", datarate);
+#endif
 	}
 	if (*mdmresult) {
 		puts("Modem says: \"");
@@ -387,6 +406,7 @@ iterations. */
 
 static int chk_modem()
 {
+#if 0
 #define i (mdmbuff[0])		/* the index into the buffer */
 #define buff (&mdmbuff[1])	/* what we use as the buffer */
 
@@ -404,6 +424,11 @@ static int chk_modem()
 	}
 	return(-1);				/* nothing happened */
 #undef i
+#else
+	int ret = 1;
+	printf("in dummy chk_modem() returning %d\n", ret);
+	return ret;
+#endif
 }
 
 /* Dial a numeric string. Returns: 0 for no connection, 1 for connected,
