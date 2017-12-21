@@ -1,8 +1,6 @@
 #ifdef WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #include <io.h>
-#include <fcntl.h>
-#include <sys/stat.h>
 #define open2(FN,FLAG) (_open((FN),(FLAG)))
 #define open(FN,FLAG,MODE) (_open((FN),(FLAG),(MODE)))
 #define close(H) (_close((H)))
@@ -10,11 +8,17 @@
 #define creat(FN,P) (_creat((FN),(P)))
 #define write(H,BUF,SIZ) (_write((H),(BUF),(SIZ)))
 #define lseek(H,X,Y) (_lseek((H),(X),(Y)))
+#else
+# define open2(FN,FLAG) (open((FN),(FLAG)))
+# define _O_RDWR O_RDWR
 #endif
+# include <fcntl.h>
+# include <sys/stat.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "compat.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "ascii.h"
@@ -44,12 +48,9 @@ static char *build_sched(struct _sched *a, char *cp);
 static void clip_cmt(char *cp);
 static char rline(int file, char *buf, int len);
 static int num_args(char *s);
-static char *next_arg(char *s);
-static char *skip_delim(char *s);
 static void cpyatm(char *to, char *from);
 static void cpyarg(char *to, char *from);
 static int delim(char c);
-static char *strip_path(char *out, char *in);
 static void stolower(char *s);
 static void stoupper(char *s);
 static int _atoi(char *s);
@@ -68,7 +69,7 @@ int main(int argc, char **argv)
 	sysfile= open2("PUPPY.SYS", _O_RDWR);		/* open it for read/write */
 	if (sysfile == -1) {
 		printf(" * File \"PUPPY.SYS\" doesn't exist, making a new one\r\n");
-		sysfile= creat("PUPPY.SYS", _S_IREAD | _S_IWRITE);	/* make a new one, */
+		sysfile= xcreat("PUPPY.SYS", XS_IREAD | XS_IWRITE);	/* make a new one, */
 		if (sysfile == -1) {
 			printf(" * Can't create it!\r\n");
 			exit(1);
@@ -78,13 +79,13 @@ int main(int argc, char **argv)
 		pup.quote_pos= 0L;		/* not used yet */
 		pup.callers= 0L;
 
-	} else read(sysfile,&pup,sizeof(struct _pup));	/* read current settings, */
+	} else xread(sysfile,&pup,sizeof(struct _pup));	/* read current settings, */
 
 	setdefaults();				/* fill in those blanks */
 	finit("PUP.SET");
 	lseek(sysfile,0L,0);
-	write(sysfile,&pup,sizeof(struct _pup));
-	close(sysfile);
+	xwrite(sysfile,&pup,sizeof(struct _pup));
+	xclose(sysfile);
 
 	setmsg();				/* create a message file */
 	setclr();				/* create a caller file */
@@ -97,14 +98,14 @@ static void setclr()
 {
 	int f;
 
-	if ((_access("PUPPY.CLR", 0)) != -1) {
+	if ((xaccess("PUPPY.CLR", 0)) != -1) {
 		printf("A caller file already exists\r\n");
 		return;
 	}
-	f= open("PUPPY.CLR", _O_CREAT, _S_IREAD | _S_IWRITE);
+	f= xopen3("PUPPY.CLR", XO_CREAT, XS_IREAD | XS_IWRITE);
 	if (f == -1) {
 		printf("The caller file can't be opened\r\n");
-		close(f);
+		xclose(f);
 		return;
 	}
 	fffill("PUPPY.CLR",(long)(pup.callsize * sizeof(struct _clr)),0);
@@ -115,11 +116,11 @@ static void setmsg()
 {
 	int f;
 
-	if ((_access("PUPPY.IDX", 0)) != -1) {
+	if ((xaccess("PUPPY.IDX", 0)) != -1) {
 		printf("A message base already exists\r\n");
 		return;
 	}
-	f= open("PUPPY.IDX", _O_CREAT, _S_IREAD | _S_IWRITE);
+	f= xopen3("PUPPY.IDX", XO_CREAT, XS_IREAD | XS_IWRITE);
 	if (f == -1) {
 		close(f);
 		printf("The message base can't be opened\r\n");
@@ -142,14 +143,14 @@ static void fffill(char *fname, /* filename */
 		buff[i]= c;
 
 	printf("Creating file %s\r\n",fname);
-	f= creat(fname, _S_IWRITE | _S_IREAD);			/* create the file, */
+	f= xcreat(fname, XS_IWRITE | XS_IREAD);			/* create the file, */
 	if (f == -1) {
 		perror("Creation error!");
 		return;
 	}
 	while (count > 0L) {
 		n= (count < sizeof(buff)) ? count : sizeof(buff);
-		if (write(f,buff,n) != n) {
+		if (xwrite(f,buff,n) != n) {
 			printf("Disk full!\r\n");
 			break;
 		}
@@ -239,7 +240,7 @@ static int finit(char *fn)
 	FLAG err;		/* error in file */
 	char *cp;
 
-	if ((_access(fn, 0)) == -1) {
+	if ((xaccess(fn, 0)) == -1) {
 		printf(" * Can't find Startup File %s\r\n", fn);
 		return(0);
 	}
@@ -421,7 +422,7 @@ static char rline(int file, char *buf, int len)
 	i= 0; notempty= 0;
 	--len;						/* compensate for added NUL */
 	while (i < len) {
-		if (! read(file,&c,1)) break;		/* stop if empty */
+		if (! xread(file,&c,1)) break;		/* stop if empty */
 		if (c == 0x1a) continue;		/* totally ignore ^Z, */
 		notempty= 1;				/* not empty */
 		if (c == '\r') continue;		/* skip CR, */
@@ -450,7 +451,7 @@ static int num_args(char *s)
 
 /* Return a pointer to the next argument in the string. */
 
-static char *next_arg(char *s)
+char *next_arg(char *s)
 {
 	while ((!delim(*s)) && *s)		/* skip this one, */
 		++s;				/* up to delim, */
@@ -460,7 +461,7 @@ static char *next_arg(char *s)
 
 /* Skip over the leading delimiters in a string. */
 
-static char *skip_delim(char *s)
+char *skip_delim(char *s)
 {
 	while (delim(*s) && *s) {
 		++s;
@@ -510,7 +511,7 @@ stuff a null, removing the name part.
 
 Also return a pointer to the name part in the input name. */
 
-static char *strip_path(char *out, char *in)
+char *strip_path(char *out, char *in)
 {
 	char *name;
 	char *endpath;

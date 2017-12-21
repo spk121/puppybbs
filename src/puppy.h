@@ -112,9 +112,9 @@ The date is stored in a single WORD as:
 /* These are all in the "library", MS-C.C and MS-ASM.ASM. */
 
 char *str_node();
-char *skip_delim();
-char *next_arg();
-char *strip_path();
+char *skip_delim(char *s);
+char *next_arg(char *s);
+char *strip_path(char *out, char *in);
 char *getarg();
 
 /* These are in the msg base mostly */
