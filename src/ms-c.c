@@ -78,6 +78,26 @@ keyhit()	Get a character from the local keyboard if one is
 
 /* Find a string, return a pointer to it or null if not found. */
 
+static uint16_t msdos_time_sec(uint16_t x)
+{
+	return 2 * (x & 0x01f);
+}
+
+static uint16_t msdos_time_min(uint16_t x)
+{
+	return (x >> 5) & 0x3f;
+}
+
+static uint16_t msdos_time_hour(uint16_t x)
+{
+	return (x >> 11) & 0x3f;
+}
+
+// MS-DOS date
+// 5 bits for day
+// 4 bits for month
+// 7 bits for years since 1980
+
 char *strfnd(char *string, char *pattern)
 {
 	char *s,*p;
@@ -101,22 +121,23 @@ int getinfo(char *name,  /* filename, */
 	struct _fileinfo *fileinfo)  /* returned file information */
 {
 	fileinfo-> xfbuf.s_attrib= 0;		/* set search attribute */
-	if (!_find(name,n,&fileinfo-> xfbuf))	/* do the MSDOS thing, */
+	if (!_find(name,n,&fileinfo->xfbuf))	/* do the MSDOS thing, */
 		return(0);			/* no matches */
 
 	strcpy(fileinfo-> name,fileinfo-> xfbuf.name);
-	fileinfo->size= fileinfo-> xfbuf.fsize; /* copy in the basic info */
 
-	fileinfo->time.day= fileinfo-> xfbuf.date & 0x0f;
-	fileinfo->time.month= (fileinfo-> xfbuf.date >> 5) & 0x0f;
-	fileinfo->time.year= ((fileinfo-> xfbuf.date >> 9) & 0x3f) + 80;
+	fileinfo->size= fileinfo-> xfbuf.fsize; /* copy in the basic info */
+#if 0
+	fileinfo->time = fileinfo-> xfbuf.date & 0x0f;
+	fileinfo->time |= ((fileinfo-> xfbuf.date >> 5) & 0x0f) << 5;
+	fileinfo->time |= ((fileinfo-> xfbuf.date >> 9) & 0x3f) + 80;
 
 /* Unpack the MSDOS time. MSDOS keeps file time seconds in 2 sec. 
 resolution. Who needs it anyways. */
 
-	fileinfo->time.hour= fileinfo-> xfbuf.time >> 11;
-	fileinfo->time.minute= (fileinfo-> xfbuf.time >> 5) & 0x3f;
-	fileinfo->time.second= 0;
+	fileinfo->time = (fileinfo->xfbuf.time >> 11) << 11;
+	fileinfo->time |= ((fileinfo-> xfbuf.time >> 5) & 0x3f) << 5;
+#endif
 
 	return(1);
 }
