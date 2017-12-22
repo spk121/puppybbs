@@ -99,8 +99,19 @@ world, but it was fun to read about.
 ## Replaceable Code
 
 - ascii.h has #ifdefs like 8 = BS, 9 = TAB
-- edit.c is an interactive console editor
+- edit.c is an interactive console editor.  Ncurses Forms also
+  has an editor.
 - quote.c has a date/time parser
+- there is initialization data, which could become an ini file, registry,
+  or database
+- there is a message file-based database, which could become a standard
+  database
+- the non-portable serial port code could become ASIO to make it both
+  portable serial port and TCP
+- there is a lot of parsing and string handling.  Boost::string_algo
+- there is a lot of filename handling.
+- xmodem I/O.  https://github.com/caseykelso/xmodem
+- there is a task scheduler. This could also be Boost::ASIO
 
 
 
