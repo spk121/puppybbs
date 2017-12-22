@@ -103,9 +103,9 @@ world, but it was fun to read about.
   has an editor.
 - quote.c has a date/time parser
 - there is initialization data, which could become an ini file, registry,
-  or database
+  or database.  Boost::property_tree?
 - there is a message file-based database, which could become a standard
-  database
+  database.  MariaDB
 - the non-portable serial port code could become ASIO to make it both
   portable serial port and TCP
 - there is a lot of parsing and string handling.  Boost::string_algo

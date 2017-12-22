@@ -31,6 +31,7 @@ void quote()
 			mark[i]= mark[i + 1];	/* slide 'em through */
 		mark[3]= c;			/* add to the end */
 		if (strcmp(mark,"\r\n\r\n") == 0) break;
+		if (mark[2] == '\n' && mark[3] == '\n') break;
 
 		fmconout(c);
 	}

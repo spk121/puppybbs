@@ -308,7 +308,8 @@ static int gettopic()
 			mputs("Choose one or more TOPIC numbers:\r\n");
 			for (n= 0; n < 16; n++) {	/* list them all, */
 				if (*pup.topic[n].name) 
-					mprintf("#%d %-8s %s\r\n",n + 1,pup.topic[n].name,pup.topic[n].desc);
+					//mprintf("#%d %-8s %s\r\n",n + 1,pup.topic[n].name,pup.topic[n].desc);
+					printf("#%d %-8s %s\r\n",n + 1,pup.topic[n].name,pup.topic[n].desc);
 			}
 			mprintf("#A          Choose ALL topics\r\n");
 		}

@@ -1,0 +1,37 @@
+;
+;PUP.SET - Puppy Configuration File 23 Dec 87
+;
+; 	Tom Jennings
+;	Fido Software
+;	164 Shipley 
+;	San Francisco CA 94107
+;
+;	(k) all rights reversed
+;
+time-limit 60			;time limit per call
+k-limit 200			;K byte download limit per call
+
+max-baud 1200			;maximum baud rate
+cd-bit 128			;modem Carrier Detect mask bit
+modem-string ATE0V0M0X1S0=0	;init the modem
+io-port 0			;depends on system; pclones can use 0 or 1
+
+file-prefix files\
+
+message-total 10		;total messages in system
+message-size 2560		;maximum size of each message
+callers 25			;how big the caller file is
+
+topic JUNK General cacaphony
+topic STUFF Specific cacaphony
+topic OTHER Irrelevant cacaphony
+
+;
+;FidoNet installation. Not used yet.
+;
+dial-tries 10			;FidoNet dialer, max attempts, no connect
+connect-tries 1			;FidoNet dialer, max attempts, with connect
+
+zone 1				;our zone
+net 125				;our net
+node 164			;our node

@@ -408,6 +408,7 @@ void mprintf(char *f, ...)
 
 	_spr(buf,&f);
 	mputs(buf);
+
 }
 
 /* Output a string to the modem. */

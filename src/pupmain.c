@@ -176,11 +176,12 @@ int main(int argc, char **argv)
 
 /* OK, no events etc. If the phone rings, answer it. If TSYNC is received 
 during the signon process, it drops into Incoming Mail. */
-
+#if 0
 		if (answer() > 0) {		/* if an incoming call, */
 			puppy();
 			rdymsg= 0;
 		}
+#endif
 	}
 
 	reset_clk();				/* turn off clock, */
