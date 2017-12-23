@@ -1,0 +1,43 @@
+
+In messages
+
+Choose one or more topic numbers
+#1 junk  General catagory
+#2 stuff   Specific category
+#A       Choose ALL topics
+Choose topic(s)#  <a number, or multiple number separated by space,comma, or "A">
+
+<Then it creates a menu of messages
+  DATE, TOPIC, FROM, TO, TITLE, and centers on the oldest unread
+  message of the given category, where "oldest" is probably constrained
+  to be the current week or so.  It is a scrolling menu where an item
+  can be selected, which will display the message.>
+
+<Aside from arrow keys, you can
+Jump --> Today, Unread, Search, Date
+Topic --> back to topic chooser dialo
+
+
+<The display message shows the DATE, TOPIC, FROM, TO, TITLE
+and then the body of the message.  THe arrow keys and such will
+jump to the nex/prev message in the current topic or topics.>
+
+<The main message menu>
+
+E) enter
+P) previous
+J) jump
+G) goobye
+T) topic
+Q) quit
+
+
+enter sends to an message edit dialog
+FROM: TO: TOPIC: message.
+ctrl K to end
+
+Then
+E) edit some more
+Q) quit without saving
+S) save
+

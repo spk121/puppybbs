@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<puppy>
+  <time-limit>60</time-limit>
+  <k-limit>200</k-limit>
+  <max-baud>1200</max-baud>
+  <modem-string>ATE0V0M0X1S0=0</modem-string>
+  <message-total>10</message-total>
+  <message-size>2560</message-size>
+  <callers>25</callers>
+  <file-prefix>files/</file-prefix>
+  <topics>
+    <topic>
+      <name>JUMK</name>
+      <desc>miscellany</desc>
+    </topic>
+    <topic>
+      <name>STUFF</name>
+      <desc>miscellany</desc>
+    </topic>
+  </topics>
+</puppy>

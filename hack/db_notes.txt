@@ -1,0 +1,46 @@
+In installed marida as
+dnf install mariadb mariadb-server
+
+and I did
+systemctl start mariadb
+systemctl enable mariadb
+
+when I ran mysql_secure_installation, I had to set some things
+
+root password: pillbox@
+
+I created a database
+CREATE DATABASE puppy;
+
+I created a user for it
+
+CREATE USER 'puppy'@'localhost' IDENTIFIED BY 'passw0rd';
+GRANT ALL on db.* to 'puppy'@'localhost';
+
+After that I can access it using
+
+mysql -u puppy -p
+USE puppy;
+
+To install the headers, I did
+dnf install mariadb-embedded-devel
+
+
+CREATE TABLE gallery_category ( 
+  category_id bigint(20) unsigned NOT NULL auto_increment, 
+  category_name varchar(50) NOT NULL default '0', 
+  PRIMARY KEY  (category_id), 
+  KEY category_id (category_id) 
+) TYPE=MyISAM; 
+ 
+CREATE TABLE gallery_photos ( 
+  photo_id bigint(20) unsigned NOT NULL auto_increment, 
+  photo_filename varchar(25), 
+  photo_caption text, 
+  photo_category bigint(20) unsigned NOT NULL default '0', 
+  PRIMARY KEY  (photo_id), 
+  KEY photo_id (photo_id) 
+) TYPE=MyISAM;
+
+INSERT INTO gallery_category(`category_name`) VALUES('My First Gallery');
+
