@@ -135,9 +135,7 @@ static int sendwt(char *s)
 {
 	int n;
 	atp(s);				/* send the string, */
-	timer1_reset();
-#if 0
-	while (timer1_get() < 2000L) {
+	for (millisec = 0L; millisec < 2000L; ){
 		n= chk_modem();		/* check for result, */
 		if (n >= 0) {		/* stop if we get one */
 			delay(50);
@@ -145,8 +143,6 @@ static int sendwt(char *s)
 		}
 	}
 	return(n);
-#endif
-	return 1;
 }
 
 /* Send a command sequence to the modem, */
@@ -175,13 +171,6 @@ get upset. Then DTR is raised. */
 
 void discon()
 {
-	fakemodem_disconnect();
-	setbaud(pup.maxbaud);			/* set the max. data rate */
-	cd_flag = 1;				/* ignore DTR */
-	modem_chk();				/* check if modem is dead */
-	mdmstate = 0;				/* modem is now idle */
-	cd_flag = 0;
-#if 0
 	int i;
 
 	limit= 0;				/* no time limit, we check explicitly */
@@ -244,14 +233,11 @@ the modem is ready before continuing. */
 	modem_chk();				/* check if modem is dead */
 	mdmstate= 0;				/* modem is now idle */
 	cd_flag= 0;
-#endif
 }
 /* Issue AT commands a few times and try to get the modems attention. */
 
 static void modem_chk()
 {
-	fakemodem_chk("AT\r");
-#if 0
 	int i;
 
 	cd_flag= 1;
@@ -259,7 +245,6 @@ static void modem_chk()
 		if (sendwt("AT\r") >= 0) return;
 	}
 	printf("Pup says: \"Modem not responding!\"\r\n");
-#endif
 }
 
 /* Poll the modem looking for activity; returns a code indicating whats
@@ -269,9 +254,6 @@ RING was received, and ATA issued, and we're waiting for connect/fail.
 
 int answer()
 {
-	fakemodem_answer();
-	return 1;
-#if 0
 	int n;
 
 	cd_flag= 0;				/* watch true carrier */
@@ -284,8 +266,7 @@ int answer()
 		case 1:				/* dial sucessful */
 			cd_flag= 0;		/* wait for CD */
 			mdmstate= 0;		/* (assume not connected) */
-			timer1_reset();
-			while (timer1_get() < 20000L) {
+			for (millisec= 0L; millisec < 20000L;) {
 				if (cd()) {	/* if we find it, */
 					delay(200); /* delay for modem/telco */
 					mdmstate= 1; /* flag the connection */
@@ -311,7 +292,6 @@ int answer()
 			break;
 	}
 	return(mdmstate);			/* say what it was */
-#endif
 }
 
 /* Given a result code from the modem, return 1 if connected OK and
@@ -406,7 +386,7 @@ iterations. */
 
 static int chk_modem()
 {
-#if 0
+
 #define i (mdmbuff[0])		/* the index into the buffer */
 #define buff (&mdmbuff[1])	/* what we use as the buffer */
 
@@ -423,12 +403,6 @@ static int chk_modem()
 		buff[i]= NUL;			/* terminate string & erase non-digit */
 	}
 	return(-1);				/* nothing happened */
-#undef i
-#else
-	int ret = 1;
-	printf("in dummy chk_modem() returning %d\n", ret);
-	return ret;
-#endif
 }
 
 /* Dial a numeric string. Returns: 0 for no connection, 1 for connected,

@@ -14,7 +14,7 @@ OBJS = compat.o edit.o driver.o files.o login.o mdmfunc.o modemio.c \
 
 puppy: $(OBJS)
 	@rm -f puppy
-	$(CCLD) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
+	$(CCLD) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) -pthread
 
 set-pup: set-pup.o compat.o
 	@rm -f set-pup

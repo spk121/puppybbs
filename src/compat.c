@@ -165,35 +165,6 @@ char *getmem(unsigned n)
 	}
 }
 
-#if 0
-/* These are replacments for the MS-DOS millisecond timers. */
-struct _timeb timer1;
-struct _timeb timer2;
-
-void timer1_reset()
-{
-	_ftime(&timer1);
-}
-
-long timer1_get()
-{
-	struct _timeb now;
-	_ftime(&now);
-	return now.time * 1000 + now.millitm - timer1.time * 1000 - timer1.millitm;
-}
-
-void timer2_reset()
-{
-	_ftime(&timer2);
-}
-
-long timer2_get()
-{
-	struct _timeb now;
-	_ftime(&now);
-	return now.time * 1000 + now.millitm - timer2.time * 1000 - timer2.millitm;
-}
-#endif
 
 
 

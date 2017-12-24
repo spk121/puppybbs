@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <pthread.h>
 #include "driver.h"
 
 /* Standard Fido driver parameters. These must be static variables. These
@@ -76,6 +77,7 @@ void init()
     }
     raise_dtr();
 }
+ 
 
 void uninit()
 {
@@ -211,19 +213,50 @@ int _mbusy()
 	return ret;
 }
 
+pthread_t thd;
+int thd_continue;
+
 void clr_clk()
 {
-	printf("in dummy func clr_clk()\n");
+    millisec = 0;
+    millis2 = 0;
+    seconds = 0;
+    minutes = 0;
+}
+
+
+void *clk_handler(void *arg)
+{
+    int tic = 1;
+    while(thd_continue)
+    {
+        usleep(1000);
+
+        millisec++;
+        millis2++;
+        if (tic % 1000 == 0)
+            seconds ++;
+        if (seconds > 59)
+        {
+            seconds = 0;
+            minutes ++;
+        }
+
+        tic ++;
+    }
+    return NULL;
 }
 
 void set_clk()
 {
-    printf("in dummy func set_clk()\n");
+    int ret;
+    thd_continue = 1;
+    ret = pthread_create(&thd, NULL, clk_handler, NULL);
 }
 
 void reset_clk()
 {
-    printf("in dummy func reset_clk()");
+    thd_continue = 0;
 }
 
 

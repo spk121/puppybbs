@@ -17,10 +17,6 @@ int allmem();
 long sizmem();	/* MSDOS */
 char *getmem(unsigned n);	/* MSDOS */
 
-void timer1_reset();
-long timer1_get();
-void timer2_reset();
-long timer2_get();
 
 void fakemodem_baud_set(unsigned b);
 void fakemodem_disconnect();

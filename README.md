@@ -112,6 +112,7 @@ world, but it was fun to read about.
 - there is a lot of filename handling.
 - xmodem I/O.  https://github.com/caseykelso/xmodem
 - there is a task scheduler. This could also be Boost::ASIO
-
-
+- what is the best c++ method to parse user input?  getline and regex?
+  Is there something easier than regex?
+- download() searches files by regex.
 
