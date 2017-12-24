@@ -8,6 +8,7 @@
 #else
 #include <unistd.h>
 #endif
+#include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include "compat.h"
@@ -125,11 +126,6 @@ int bdos2(int fn, int dx)
 }
 #endif
 
-
-
-
-
-
 static long mempool_size = 1024 * 1024;
 static long mempool_alloc;
 
@@ -159,7 +155,7 @@ char *getmem(unsigned n)
 	{
 		mempool_alloc -= n;
 		char *ret = malloc(n);
-		printf("in dummy func getmem() returning buffer with %ld bytes\n", n);
+		printf("in dummy func getmem() returning buffer with %d bytes\n", n);
 		return ret;
 	}
 	else
@@ -169,6 +165,7 @@ char *getmem(unsigned n)
 	}
 }
 
+#if 0
 /* These are replacments for the MS-DOS millisecond timers. */
 struct _timeb timer1;
 struct _timeb timer2;
@@ -196,7 +193,7 @@ long timer2_get()
 	_ftime(&now);
 	return now.time * 1000 + now.millitm - timer2.time * 1000 - timer2.millitm;
 }
-
+#endif
 
 
 
@@ -265,6 +262,10 @@ int xwrite(int filedes, const void *buffer, unsigned int size)
 
 long xseek(int filedes, long offset, int origin)
 {
+#ifdef _WIN32
 	return _lseek(filedes, offset, origin);
+#else
+	return lseek(filedes, (off_t) offset, origin);
+#endif
 }
 

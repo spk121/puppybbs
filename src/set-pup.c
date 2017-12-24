@@ -42,16 +42,12 @@ static int _atoi(char *s);
 
 int main(int argc, char **argv)
 {
-	char *p,fn[SS],sw[SS];
-	int i;
-	FLAG quit,once,writeout;
-
 	printf("Pup configuration, version 2b, 25 Jan 88\r\n");
 	printf("Tom Jennings, 164 Shipley\r\n");
 	printf("San Francisco CA 94107 USA\r\n");
 	printf("(k) all rights reversed\r\n");
 
-	sysfile= xopen2("PUPPY.SYS", _O_RDWR);		/* open it for read/write */
+	sysfile= xopen2("PUPPY.SYS", XO_RDWR);		/* open it for read/write */
 	if (sysfile == -1) {
 		printf(" * File \"PUPPY.SYS\" doesn't exist, making a new one\r\n");
 		sysfile= xcreat("PUPPY.SYS", XS_IREAD | XS_IWRITE);	/* make a new one, */
@@ -122,9 +118,9 @@ static void fffill(char *fname, /* filename */
 	char c)              /* fill character */
 {
 	char buff[1024];
-	int f,i,n;
+	int f,n;
 
-	for (i=0; i < sizeof(buff); i++) 	/* fill the buffer with nothings */
+	for (size_t i=0; i < sizeof(buff); i++) 	/* fill the buffer with nothings */
 		buff[i]= c;
 
 	printf("Creating file %s\r\n",fname);
@@ -229,7 +225,7 @@ static int finit(char *fn)
 		printf(" * Can't find Startup File %s\r\n", fn);
 		return(0);
 	}
-	f= xopen2(fn, _O_RDWR);
+	f= xopen2(fn, XO_RDWR);
 	if (f == -1) {
 		printf(" * Can't open Startup File %s\r\n", fn);
 		return(0);

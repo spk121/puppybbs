@@ -2,6 +2,7 @@
 #include <string.h>
 #include "ascii.h"
 #include "compat.h"
+#include "driver.h"
 #include "login.h"
 #include "ms-asm.h"
 #include "modemio.h"
@@ -129,7 +130,7 @@ void setscreen()
 	char *cp;
 
 	cp= getarg("How wide is your screen? (CR=80): ");
-	if (*cp) caller.cols= atoi(cp);
+	if (*cp) caller.cols= xatoi(cp);
 	else caller.cols= 80;
 	if ((caller.cols < 20) || (caller.cols > 80)) caller.cols= 40;
 
