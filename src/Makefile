@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra
 CDEBUG = -g -O1
 
 OBJS = compat.o edit.o driver.o files.o login.o mdmfunc.o modemio.c \
-	ms-c.o msgbase.o \
+	ms-asm.o ms-c.o msgbase.o \
 	printf.o pup.o pupmain.o quote.o sched.o support.o xmodem.o
 
 .c.o:  
