@@ -9,24 +9,9 @@
 #include <sys/stat.h>
 #include <stdint.h>
 
-int _mconstat();
-int _mconin();
-int _mbusy();
-void _mconout(char c);
-int _cd();
 int _ioctl(int a, int b, int c, int d);
 // int bdos(int fn);
 // int bdos2(int fn, int dx);
-void baud(uint16_t datarate);
-void lower_dtr();
-void raise_dtr();
-
-void init();
-void uninit();
-
-void clr_clk();
-void set_clk();
-void reset_clk();
 
 int allmem();
 long sizmem();	/* MSDOS */
@@ -48,11 +33,13 @@ int fakemodem_connect_get();
 #define XS_IWRITE (_S_IWRITE)
 #define XO_CREAT (_O_CREAT)
 #define XO_RDONLY (_O_RDONLY)
+#define XO_RDWR (_O_RDWR)
 #else
 #define XS_IREAD (S_IREAD)
 #define XS_IWRITE (S_IWRITE)
 #define XO_CREAT (O_CREAT)
 #define XO_RDONLY (O_RDONLY)
+#define XO_RDWR (O_RDWR)
 #endif
 int xaccess(const char *filename, int how);
 int xclose(int filedes);

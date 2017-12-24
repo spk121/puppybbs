@@ -5,29 +5,46 @@ are assumed to be set properly by init() in the hardware specific driver. */
 
 /* CRT variables */
 
-const static unsigned cols = 80;		/* number of CRT columns */
-const static unsigned lines = 24;		/* number of CRT lines, total */
-const static unsigned top = 0;		/* first line NUMBER */
-const static unsigned bottom = 23;		/* bottom line NUMBER */
+extern unsigned cols = 80;		/* number of CRT columns */
+extern unsigned lines = 24;		/* number of CRT lines, total */
+extern unsigned top = 0;		/* first line NUMBER */
+extern unsigned bottom = 23;		/* bottom line NUMBER */
 
-const static char ulcorner = '+';		/* graphic characters for boxes */
-const static char urcorner = '+';
-const static char llcorner = '+';
-const static char lrcorner = '+';
-const static char vertbar = '|';
-const static char horizbar = '-';
-
-const static char graph_on[80] = "";		/* enable graphics */
-const static char graph_off[80] = "";	/* disable graphics */
+extern char ulcorner = '+';		/* graphic characters for boxes */
+extern char urcorner = '+';
+extern char llcorner = '+';
+extern char lrcorner = '+';
+extern char vertbar = '|';
+extern char horizbar = '-';
+extern char graph_on[80] = "";		/* enable graphics */
+extern char graph_off[80] = "";	/* disable graphics */
 
 /* Modem variables */
 
-// const static uint16_t cd_bit = 0xffff;	/* bit to test for Carrier Detect, */
-// const static uint16_t iodev = 0;		/* serial channel number */
+extern uint16_t cd_bit = 0xffff;	/* bit to test for Carrier Detect, */
+extern uint16_t iodev = 0;		/* serial channel number */
 
 /* Time stuff */
+extern long millisec;
+extern long millis2;
+extern int seconds,minutes,hours;
 
-extern uint16_t seconds,minutes,hours;
+void scrinit();
+void init();
+void uninit();
+void baud(int rate);
+int _mconstat();
+int _mconin();
+void _mconout(char c);
+int _cd();
+void lower_dtr();
+void raise_dtr();
+int _mbusy();
+void clr_clk();
+void set_clk();
+void reset_clk();
+
+
 
 
 

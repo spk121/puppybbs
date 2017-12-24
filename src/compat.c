@@ -84,54 +84,7 @@ int fakemodem_connect_get()
 	return fakemodem.connected;
 }
 
-int _mbusy()
-{
-	int ret = 0;
-	printf("in dummy func _mbusy() returns %d\n", ret);
-	return ret;
-}
 
-/* Return TRUE if a character is avaiable to be read from the modem. */
-int _mconstat()
-{
-	if (fakemodem.connected)
-		return _kbhit();
-	else
-		return 0;
-#if 0
-	int ret = 0;
-	printf("in dummy func _mconstat() returns %d\n", ret);
-	return ret;
-#endif
-}
-
-/* Return the next available character from the modem. */
-int _mconin()
-{
-#if 0
-	int ret = 'x';
-	printf("in dummy func _mconin() returns %d\n", ret);
-	return ret;
-#endif
-	return _getch();
-}
-
-/* Write a character to the modem. */
-void _mconout(char c)
-{
-#if 0
-	printf("in dummy func _mconin(%d)\n", c);
-#endif
-	_putchar_nolock(c);
-}
-
-/* Return true if modem is connected. */
-int _cd()
-{
-	int ret = fakemodem_connect_get();
-	// printf("in dummy func _cd() returns %d\n", ret);
-	return ret;
-}
 
 /* What did this do? */
 int _ioctl(int a, int b, int c, int d)
@@ -141,11 +94,6 @@ int _ioctl(int a, int b, int c, int d)
 	return ret;
 }
 
-void baud(uint16_t datarate)
-{
-	//printf("in dummy func baud(%u)\n", datarate);
-	fakemodem_baud_set(datarate);
-}
 
 #if 0
 /* bdos() was a buffered i/o operation scheme that sent or received one byte
@@ -177,40 +125,10 @@ int bdos2(int fn, int dx)
 }
 #endif
 
-void lower_dtr()
-{
-	printf("in dummy func lower_dtr()\n");
-}
 
-void raise_dtr()
-{
-	printf("in dummy func raise_dtr()\n");
-}
 
-void init()
-{
-	printf("in dummy func init()\n");
-}
 
-void uninit()
-{
-	printf("in dummy func uninit()\n");
-}
 
-void clr_clk()
-{
-	printf("in dummy func clr_clk()\n");
-}
-
-void set_clk()
-{
-	printf("in dummy func set_clk()\n");
-}
-
-void reset_clk()
-{
-	printf("in dummy func reset_clk()\n");
-}
 
 static long mempool_size = 1024 * 1024;
 static long mempool_alloc;

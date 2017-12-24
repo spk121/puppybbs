@@ -3,7 +3,7 @@ all: set-pup puppy
 CFLAGS = -Wall -Wextra
 CDEBUG = -g -O1
 
-OBJS = edit.o files.o login.o mdmfunc.o ms-c.o msgbase.o \
+OBJS = edit.o driver.o files.o login.o mdmfunc.o ms-c.o msgbase.o \
 	printf.o pup.o pupmain.o quote.o sched.o support.o xmodem.o
 
 .c.o:  
@@ -24,4 +24,5 @@ clean :
 	-rm *.o
 	-rm *.map
 
-
+check-syntax:
+	$(CC) $(CDEBUG) $(CFLAGS) $(CVARS) -o /dev/null -S $(CHK_SOURCES)
