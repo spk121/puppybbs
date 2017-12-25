@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "ascii.h"
 #include "compat.h"
@@ -130,7 +131,7 @@ void setscreen()
 	char *cp;
 
 	cp= getarg("How wide is your screen? (CR=80): ");
-	if (*cp) caller.cols= xatoi(cp);
+	if (*cp) caller.cols= atoi(cp);
 	else caller.cols= 80;
 	if ((caller.cols < 20) || (caller.cols > 80)) caller.cols= 40;
 

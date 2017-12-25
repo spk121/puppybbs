@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdlib.h>
 #include "compat.h"
@@ -38,7 +39,6 @@ static void cpyarg(char *to, char *from);
 static int delim(char c);
 static void stolower(char *s);
 static void stoupper(char *s);
-static int _atoi(char *s);
 
 int main(int argc, char **argv)
 {
@@ -257,7 +257,7 @@ static int finit(char *fn)
 		stolower(word);
 		stolower(arg);
 
-		value= _atoi(arg);			/* _atoi() it blindly */
+		value= atoi(arg);			/* atoi() it blindly */
 		if (same(arg,"on") || same(arg,"yes"))
 			value= 1;			/* else 0 == off == no */
 
@@ -292,7 +292,7 @@ static void inierr(char *fn, int lineno, char *ln, char *error)
 static char *process(int i, /* keyword table index */
 	char *arg,       /* next word at cp, for convenience */
 	char *cp,        /* ptr to line after keyword */
-	int value)       /* _atoi of arg for convenience */
+	int value)       /* atoi of arg for convenience */
 {
 	char *rp;
 
@@ -310,7 +310,7 @@ static char *process(int i, /* keyword table index */
 
 		case 8: pup.id.number= value; break;
 		case 9: pup.id.net= value; break;
-		case 10: pup.id.zone= _atoi(arg); break;
+		case 10: pup.id.zone= atoi(arg); break;
 
 		case 11: strcpy(pup.filepref,arg); break;
 
@@ -349,15 +349,15 @@ static char *build_sched(struct _sched *a, char *cp)
 	int n,h,m;
 	long l;
 
-	a-> hr= _atoi(cp);				/* get start time, */
+	a-> hr= atoi(cp);				/* get start time, */
 	if (a-> hr > 23) return("Hour must be 0 to 23");
 	while (isdigit(*cp)) ++cp;			/* look for a colon */
-	if (*cp == ':') a-> min= _atoi(++cp);		/* get mins if so, */
+	if (*cp == ':') a-> min= atoi(++cp);		/* get mins if so, */
 	else a-> min= 0;
 	if (a-> min > 59) return("Minute must be 0 to 59");
 
 	cp= next_arg(cp);				/* get sched width */
-	a-> len= _atoi(cp);				/* or is it ERRORLEVEL */
+	a-> len= atoi(cp);				/* or is it ERRORLEVEL */
 
 	cp= next_arg(cp);				/* do tag */
 	a-> tag= toupper(*cp);
@@ -537,16 +537,3 @@ static void stoupper(char *s)
 	}
 }
 
-/* _atoi() function missing from Lattice C. From Kernighan and Richie. */
-
-static int _atoi(char *s)
-{
-	int n;
-	n= 0;
-	while ((*s >= '0') && (*s <= '9')) {
-		n *= 10;
-		n += *s - '0';
-		++s;
-	}
-	return(n);
-}

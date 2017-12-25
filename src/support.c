@@ -69,11 +69,6 @@ stolower(s)	Convert a string to all lower case
 
 stoupper(s)	Convert a string to all upper case
 
-atoi(s)		Convert a string of digits into a numeric value; stops
-		when the first non-digit character is found.
-
-
-
 str_time(s,t)	Generates a static string expression of date or time, and
 str_date(s,t)	returns a pointer to it. Through a kludge it can be 
 		called up to 4 times without overwriting a previous 
@@ -368,20 +363,6 @@ void stoupper(char *s)
 		*s= toupper(*s);
 		++s;
 	}
-}
-
-/* atoi() function missing from Lattice C. From Kernighan and Richie. */
-
-int xatoi(char *s)
-{
-	int n;
-	n= 0;
-	while ((*s >= '0') && (*s <= '9')) {
-		n *= 10;
-		n += *s - '0';
-		++s;
-	}
-	return(n);
 }
 
 /* Return true if the two nodes are the same. */
