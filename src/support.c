@@ -108,7 +108,7 @@ static void cpy_node(struct _node *d, struct _node *s);
 char *str_date(WORD t)
 {
 	static char work[2][sizeof("31 Dec 143 ")];	/* where we keep them */
-	static int k;					/* which one as are on */
+	static int k = 0;					/* which one as are on */
 
 	k = ++k % 2;		/* select next ... */
 	*work[k]= NUL;		/* empty it */
@@ -116,7 +116,7 @@ char *str_date(WORD t)
 	sprintf(work[k],"%u %s %02u",		/* the format, */
 	    t & 0x1f,				/* the day, */
 	    months[(t >> 5) & 0x0f],		/* the month name */
-	    ((t >> 9) & 0x3f) + 80);		/* the year */
+	    (((t >> 9) & 0x3f) + 80)%100);		/* the year */
 	return(work[k]);
 }
 
@@ -125,7 +125,7 @@ char *str_date(WORD t)
 char *str_time(WORD t)
 {
 	static char work[2][sizeof("23:59PM ")];	/* where we keep them */
-	static int k;					/* which one as are on */
+	static int k = 0;					/* which one as are on */
 	char hour;
 
 	k = ++k % 2;		/* select next ... */
@@ -227,7 +227,7 @@ void putsys()
 {
 	int f;
 
-	f= xopen2("puppy.sys",2);
+	f= xopen2("PUPPY.SYS",2);
 	if (f == -1) {
 		printf("Can't open PUPPY.SYS!\r\n");
 		return;
