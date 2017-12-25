@@ -14,6 +14,6 @@ void set_abort(int x)
 int was_abort()
 {
 	int ret = 0;
-	printf("in dummy func was_abort() returning %d\n");
+	printf("in dummy func was_abort() returning %d\n", ret);
 	return ret;
 }

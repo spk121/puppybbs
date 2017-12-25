@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include <string.h>
 #include "ascii.h"
 #include "compat.h"
@@ -6,7 +7,6 @@
 #include "login.h"
 #include "ms-asm.h"
 #include "modemio.h"
-#include "printf.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "quote.h"
@@ -120,7 +120,7 @@ makes all messages newer than they are. */
 	dspfile("welcome.pup");
 	stuff();						/* show other stuff */
 	quote();						/* do a quotation */
-	mprintf("\r\nYou are caller #%,lu\r\n\r\n",++pup.callers);
+	mprintf("\r\nYou are caller #%lu\r\n\r\n",++pup.callers);
 }
 
 /* Set screen stuff. */

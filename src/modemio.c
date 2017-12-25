@@ -1,12 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
 #include "ascii.h"
 #include "compat.h"
 #include "driver.h"
 #include "modemio.h"
 #include "ms-c.h"
-#include "printf.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "support.h"
@@ -403,13 +404,15 @@ void mconflush()
 
 /* Formatted print to the modem. */
 
-void mprintf(char *f, ...)
+void mprintf(char *template, ...)
 {
 	char buf[500];
-
-	_spr(buf,&f);
+	memset(buf, 0, 500);
+	va_list ap;
+	va_start (ap, template);
+	vsnprintf(buf, 499, template, ap);
+	va_end(ap);
 	mputs(buf);
-
 }
 
 /* Output a string to the modem. */

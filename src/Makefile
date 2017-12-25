@@ -4,13 +4,13 @@ CC = gcc
 CCLD = gcc
 CFLAGS = -Wall -Wextra -fdiagnostics-color=auto -fPIE -fno-omit-frame-pointer \
   -march=native
-CDEBUG = -g -O1
+CDEBUG = -g -O0
 LDFLAGS = -pie -Wl,-z,now
 
 OBJS = abort.o \
 	compat.o edit.o driver.o files.o login.o mdmfunc.o modemio.c \
 	ms-asm.o ms-c.o msgbase.o \
-	printf.o pup.o pupmain.o quote.o sched.o support.o xmodem.o
+	pup.o pupmain.o quote.o sched.o support.o xmodem.o
 
 .c.o:  
 	$(CC) -c $(CDEBUG) $(CFLAGS) $(CVARS) $*.c  

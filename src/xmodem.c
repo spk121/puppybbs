@@ -1,12 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
 #include "ascii.h"
 #include "compat.h"
 #include "modemio.h"
 #include "ms-asm.h"
 #include "ms-c.h"
-#include "printf.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "support.h"
@@ -746,7 +747,7 @@ static void _cvt2(char *inname, char *outname, int n)
 	2	CR/LF before & after text
  */
 
-static void xferstat(int n, char *s, ...)
+static void xferstat(int n, char *template, ...)
 {
 	char buff[SS * 4];
 
@@ -763,7 +764,12 @@ static void xferstat(int n, char *s, ...)
 	if (crcmode) puts("C");
 	puts(": ");	
 
-	_spr(buff,&s);
+	char buf[500];
+	memset(buf, 0, 500);
+	va_list ap;
+	va_start (ap, template);
+	vsnprintf(buf, 499, template, ap);
+	va_end(ap);
 	puts(buff);
 
 	puts("\r"); if (n) puts("\n");

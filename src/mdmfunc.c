@@ -1,12 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 #include "ascii.h"
 #include "compat.h"
 #include "driver.h"
 #include "mdmfunc.h"
 #include "modemio.h"
-#include "printf.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "support.h"

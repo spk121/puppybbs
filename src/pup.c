@@ -2,6 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include <ctype.h>
+#include <stdio.h>
 #include <string.h>
 #include "abort.h"
 #include "ascii.h"
@@ -13,7 +14,6 @@
 #include "ms-asm.h"
 #include "ms-c.h"
 #include "msgbase.h"
-#include "printf.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "support.h"
