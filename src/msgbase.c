@@ -95,8 +95,8 @@ static void writehdr(int n);
 
 void openmsg()
 {
-	msgfile= xopen2("puppy.idx",2);		/* open the msg base */
-	txtfile= xopen2("puppy.dat",2);
+	msgfile= xopen2("PUPPY.IDX",2);		/* open the msg base */
+	txtfile= xopen2("PUPPY.DAT",2);
 	if ((msgfile < 0) || (txtfile < 0)) {
 		printf("Message base file(s) missing!\r\n");
 

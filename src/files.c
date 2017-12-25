@@ -33,7 +33,7 @@ static int listfile()
 	int file;
 	int files;			/* how many we found */
 
-	makefname(name,"files.pup");
+	makefname(name,"FILES.PUP");
 	file= xopen2(name,0);
 	if (file == -1) {
 		mprintf("\r\nSORRY: No Files\r\n");

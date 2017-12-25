@@ -14,7 +14,7 @@ void quote()
 	char mark[5];
 	char c;
 
-	f= xopen2("quotes.pup", XO_RDONLY);		/* open it, */
+	f= xopen2("QUOTES.PUP", XO_RDONLY);		/* open it, */
 	if (f == -1) return;			/* doesnt exist, */
 	xseek(f,pup.quote_pos,0);		/* seek to correct place, */
 	strcpy(mark,"abcd");			/* anything but CR LF CR LF */

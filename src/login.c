@@ -167,7 +167,7 @@ void stuff()
 void openclr()
 {
 
-	clrfile= xopen2("puppy.clr",2);
+	clrfile= xopen2("PUPPY.CLR",2);
 	if (clrfile == -1) printf("THE CALLER FILE IS MISSING!\r\n");
 	clrno= -1;
 }
