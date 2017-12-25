@@ -1,4 +1,5 @@
 #include <time.h>
+#include <sys/time.h>
 #include "ms-asm.h"
 
 /* MS-DOS 16-bit time appears to have been
@@ -27,6 +28,7 @@ uint16_t gdate()
 	return (tt->tm_mday | (tt->tm_mon + 1) << 5 | ((tt->tm_year - 80) << 9));
 }
 
+#if 0
 /* puts a MS-DOS long, really an int32, into
  * a byte array. 
  */
@@ -41,12 +43,13 @@ void _ctol(uint32_t *dst, const char *src)
 {
 	memcpy(dst, src, 4);
 }
-
+#endif
 
 /* Note on 8086 registers
  * AX, BX, CX, DX are 16-bit general purpose
  * SP, and BP are stack pointer and base pointer
- * SI, DI, BX, and BP are address registers
+ * SI, DI, BX, and BP are address registers */
+
 /* MS-DOS call 0x44 IOCTL.
   0 Get device info
   1 set device info
@@ -154,3 +157,34 @@ _close();
 
 _lseek();
 #endif
+
+/* As far as I can tell, this sets (if op = 1) or gets
+ * if (op = 0) the timestamp on the file given by HANDLE,
+ * where time is given as a 4-byte of 16-bit MS-DOS time
+ * and 16-bit MS-DOS date.
+ * 
+ * It is used in xmodem.c to preserve the creation date
+ * of files downloaded via xmodem.
+ * */
+int _ftime(int op, int handle, uint16_t *timedat)
+{
+	if (op == 1)
+	{
+		/* setting file time */
+		struct tm *brokentime = localtime(time(0));
+		brokentime->tm_sec = 2 * (timedat[0] & 0x1f);
+		brokentime->tm_min = (timedat[0] >> 5) & 0x3f;
+		brokentime->tm_hour = (timedat[0] >> 11);
+		brokentime->tm_mday = timedat[1] & 0x1f;
+		brokentime->tm_mon = ((timedat[1] >> 5) & 0xf) - 1;
+		brokentime->tm_year = (timedat[1] >> 9) + 80;	
+		time_t timestamp = mktime(brokentime);
+		struct timeval TVP[2];
+		TVP[0].tv_sec = timestamp;
+		TVP[0].tv_usec = 0;
+		TVP[1].tv_sec = timestamp;
+		TVP[1].tv_usec = 0;
+		futimes(handle, TVP);
+		return 1;
+	}
+}

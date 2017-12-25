@@ -45,8 +45,8 @@ WORD linkrate;		/* baud rate to/from modem */
 WORD datarate;		/* baud rate to/from caller */
 FLAG cd_flag;		/* true == ignore CD line */
 
-WORD cd_bit;	/* MSDOS driver: bit to test for Carrier Detect, */
-WORD iodev;	/* MSDOS driver: serial channel number */	
+// WORD cd_bit;	/* MSDOS driver: bit to test for Carrier Detect, */
+// WORD iodev;	/* MSDOS driver: serial channel number */	
 
 /* Local text buffer */
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 	printf("(k) all rights reversed\r\n");
 	test= 0;				/* not test mode */
 
-	i= xopen2("puppy.sys",0);			/* load the system file */
+	i= xopen2("PUPPY.SYS",0);			/* load the system file */
 	if (i == -1) {
 		printf("Can't find PUPPY.SYS\r\n");
 		exit(1);
@@ -113,9 +113,6 @@ int main(int argc, char **argv)
 */
 	set_clk();				/* install clock */
 	init();					/* start up hardware, */
-
-	timer1_reset();
-	timer2_reset();
 
 	evtmsg= 0;				/* no event warning yet */
 	rdymsg= 0;				/* no ready message yet */
@@ -176,12 +173,10 @@ int main(int argc, char **argv)
 
 /* OK, no events etc. If the phone rings, answer it. If TSYNC is received 
 during the signon process, it drops into Incoming Mail. */
-#if 0
 		if (answer() > 0) {		/* if an incoming call, */
 			puppy();
 			rdymsg= 0;
 		}
-#endif
 	}
 
 	reset_clk();				/* turn off clock, */

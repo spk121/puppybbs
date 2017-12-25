@@ -27,7 +27,7 @@ extern uint16_t iodev;		/* serial channel number */
 /* Time stuff */
 extern long millisec;
 extern long millis2;
-extern int seconds,minutes,hours;
+extern int seconds, minutes, hours;
 
 void scrinit();
 void init();

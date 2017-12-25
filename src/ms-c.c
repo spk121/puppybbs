@@ -2,6 +2,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
+#include <termios.h>
+#include <sys/ioctl.h>
 #include "compat.h"
 #include "ms-asm.h"
 #include "ms-c.h"
@@ -80,6 +82,7 @@ keyhit()	Get a character from the local keyboard if one is
 
 /* Find a string, return a pointer to it or null if not found. */
 
+#if 0
 static uint16_t msdos_time_sec(uint16_t x)
 {
 	return 2 * (x & 0x01f);
@@ -94,6 +97,7 @@ static uint16_t msdos_time_hour(uint16_t x)
 {
 	return (x >> 11) & 0x3f;
 }
+#endif
 
 // MS-DOS date
 // 5 bits for day
@@ -172,21 +176,49 @@ void close_up()
 		xclose(i);
 	}
 }
+
+
+
+
+
 /* get a character from the console. */
 
 int lconin()
 {
+#ifdef WIN32
 	//return(bdos(7));
 	return _getch();
+#else
+	return getchar();
+#endif
 }
 /* If a key is hit, return the key, else 0. */
 
 char keyhit()
 {
+#ifdef WIN32
 	if (_kbhit())
 		return _getch();
 	else
 		return 0;
+#else
+	static const int STDIN = 1;
+	static int initialized = 0;
+	if (!initialized)
+	{
+		struct termios term;
+		tcgetattr(STDIN, &term);
+		term.c_lflag = ~ICANON;
+		tcsetattr(STDIN, TCSANOW, &term);
+		setbuf(stdin, NULL);
+		initialized = 1;
+	}
+	int bytes_waiting;
+	ioctl(STDIN, FIONREAD, &bytes_waiting);
+	if (bytes_waiting == 0)
+		return 0;
+	return getchar();
+#endif
 }
 
 /* Type a character, dont change cursor position. */
