@@ -202,22 +202,25 @@ char keyhit()
 	else
 		return 0;
 #else
-	static const int STDIN = 1;
-	static int initialized = 0;
-	if (!initialized)
-	{
-		struct termios term;
-		tcgetattr(STDIN, &term);
-		term.c_lflag = ~ICANON;
-		tcsetattr(STDIN, TCSANOW, &term);
-		setbuf(stdin, NULL);
-		initialized = 1;
-	}
-	int bytes_waiting;
-	ioctl(STDIN, FIONREAD, &bytes_waiting);
-	if (bytes_waiting == 0)
-		return 0;
-	return getchar();
+	struct termios oldt, newt;
+	int ch;
+	int oldf;
+
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	cfmakeraw(&newt);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+	fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+	ch = getchar();
+
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+	if (ch != -1)
+		return ch;
+	return 0;
 #endif
 }
 
