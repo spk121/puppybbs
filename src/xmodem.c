@@ -22,10 +22,10 @@
 
 /* Protocol driver return codes */
 
-#define OK 0		/* alls well */
-#define ERROR -1	/* generic error */
-#define ABORT -2	/* manually aborted */
-#define DISKFULL -3	/* disk full error */
+#define XMODEM_OK 0		/* alls well */
+#define XMODEM_ERROR -1	/* generic error */
+#define XMODEM_ABORT -2	/* manually aborted */
+#define XMODEM_DISKFULL -3	/* disk full error */
 
 /* Global statistics */
 
@@ -37,7 +37,11 @@ static FLAG diverter;	/* packeter/unpacketer byte diverter */
 
 static void xmitdone(int files);
 static int getfname(char *name);
+#ifdef _WIN32
+static int getfile(HANDLE f);
+#else
 static int getfile(int f);
+#endif
 static int sendfname(char *name);
 static int sendfile(int file, int statflg, struct _fileinfo *fileinfo);
 static int getack();
@@ -67,7 +71,7 @@ int transmit(char *fn, /* filename for XMODEM */
 {
 	char fspec[SS];		/* full file to search for */
 	char fname[SS];		/* full filename to send */
-	int i,f,files;
+	int i,f,files = 0;
 	int error;
 	struct _fileinfo fileinfo;
 	FLAG dofn;		/* 1 == do modem7 filename */
@@ -89,8 +93,8 @@ int transmit(char *fn, /* filename for XMODEM */
 			strcat(fname,fileinfo.name);	/* add the filename */
 			xferstat(1,"File: %s",fname);	/* display it, */
 
-			if (dofn) error= sendfname(fileinfo.name); else error= OK;
-			if (error != OK) break;		/* ERROR or ABORT */
+			if (dofn) error= sendfname(fileinfo.name); else error= XMODEM_OK;
+			if (error != XMODEM_OK) break;		/* XMODEM_ERROR or XMODEM_ABORT */
 
 			f= xopen2(fname,0);		/* open it, */
 			if (f == -1) {
@@ -99,7 +103,7 @@ int transmit(char *fn, /* filename for XMODEM */
 			}
 			error= sendfile(f,dotb,&fileinfo);
 			xclose(f);			/* close the file, */
-			if (error != OK) break;		/* check errors */
+			if (error != XMODEM_OK) break;		/* check errors */
 			if (strlen(fname) < listlen) {	/* keep a list */
 				strcat(namelist,fname);
 				strcat(namelist," ");
@@ -108,7 +112,7 @@ int transmit(char *fn, /* filename for XMODEM */
 			++totl_files;			/* count another */
 			++files;
 		}
-		if (error != OK) break;
+		if (error != XMODEM_OK) break;
 	}
 	xmitdone(files);				/* complete transmission */
 	return(error);
@@ -143,7 +147,12 @@ int receive(char *fn, /* fn is filename for XMODEM */
 	char *namelist,   /* namelist is list of received names */
 	int listlen)      /* listlen is max. len of the list */
 {
-	int f,oops;
+#ifdef _WIN32
+	HANDLE f;
+#else
+	int f;
+#endif
+	int oops;
 	char path[SS];		/* path/drive from input filename */
 	char name[SS];		/* plain filename only */
 	char fname[SS];		/* fully filename with prefix */
@@ -163,7 +172,7 @@ int receive(char *fn, /* fn is filename for XMODEM */
 	while (1) {
 		if (dofn) {				/* for TELINK/MODEM7 */
 			oops= getfname(name);		/* get the filename */
-			if (oops != OK) {		/* remotely */
+			if (oops != XMODEM_OK) {		/* remotely */
 				xferstat(1,"Can't get a filename");
 				break;			/* error */
 			}
@@ -177,7 +186,7 @@ int receive(char *fn, /* fn is filename for XMODEM */
 		if (f != -1) {				/* exist */
 			xclose(f);
 			xferstat(2,"File already exists!");
-			oops= ERROR;
+			oops= XMODEM_ERROR;
 			break;
 		}
 		f= xcreat(fname,2);			/* create it, */
@@ -188,7 +197,7 @@ int receive(char *fn, /* fn is filename for XMODEM */
 		oops= getfile(f);			/* fill it, */
 		xclose(f);				/* close it, */
 
-		if (oops != OK) break;			/* oops, ABORT or EOT */
+		if (oops != XMODEM_OK) break;			/* oops, XMODEM_ABORT or EOT */
 		if (strlen(fname) < listlen) {		/* keep a list */
 			strcat(namelist,fname);
 			strcat(namelist," ");
@@ -201,8 +210,8 @@ int receive(char *fn, /* fn is filename for XMODEM */
 	return(oops);
 }		
 
-/* Receive a MODEM7 filename, put into the passed array; return ERROR if error,
-OK if we get a filename, EOT if no more files. */
+/* Receive a MODEM7 filename, put into the passed array; return XMODEM_ERROR if error,
+XMODEM_OK if we get a filename, EOT if no more files. */
 
 static int getfname(char *name)
 {
@@ -212,22 +221,26 @@ static int getfname(char *name)
 	aborts= 0;
 	for (i= 30; i-- > 0; ) {
 		switch (getfn(name)) {
-			case OK: return(OK);	/* got a name, */
+			case XMODEM_OK: return(XMODEM_OK);	/* got a name, */
 			case EOT: return(EOT); 	/* no more files */
-			case ETX: if (++aborts > 2) return(ABORT);
+			case ETX: if (++aborts > 2) return(XMODEM_ABORT);
 				break;
 		}
 	}
-	return(ERROR);
+	return(XMODEM_ERROR);
 }
 
-/* Get a single file from the remote computer. Return ERROR if something
+/* Get a single file from the remote computer. Return XMODEM_ERROR if something
 went wrong, SOH if the remote is not in batch mode, or 0 if transfer 
 complete. If batch mode, the name is a prefix we should stick on the 
 beginning of the disk file we create. Does CRC mode if that mode is set,
 or a newer TELINK is used, that transmits the CRC flag. */
 
+#ifdef _WIN32
+static int getfile(HANDLE f) /* f is open file */
+#else
 static int getfile(int f) /* f is open file */
+#endif
 {
 	int i;
 	int blknum;				/* file block number, */
@@ -277,7 +290,7 @@ static int getfile(int f) /* f is open file */
 				if (put_buff(f,buff,i) != i) {
 					xferstat(2,"DISK FULL!");
 					++totl_errors;
-					return(DISKFULL);
+					return(XMODEM_DISKFULL);
 				}
 				++totl_blocks;
 				++sector;
@@ -300,12 +313,12 @@ goodblk: ;			aborts= 0;
 				xferstat(1,"End of File EOT");
 				modout(ACK);		/* ACK the EOT, */
 				if (ftime != -1L)	/* set filetime */
-					_ftime(1,f,&ftime);
-				return(OK);
+					_filetime(1,f,(uint16_t *)&ftime);
+				return(XMODEM_OK);
 
 			case ETX:			/* Control-C */
 				xferstat(1,"Control-C");
-				if (++aborts > 2) return(ABORT);
+				if (++aborts > 2) return(XMODEM_ABORT);
 				break;
 
 			case -1:			/* timeout */
@@ -322,7 +335,7 @@ goodblk: ;			aborts= 0;
 		++totl_errors;			/* flush the line */
 		flush(1);			/* was 100 */
 	}
-	return(ERROR);
+	return(XMODEM_ERROR);
 }
 
 /* Send a filename, MODEM7 style. */
@@ -334,11 +347,11 @@ static int sendfname(char *name)
 	aborts= 0;
 	for (i= 10; i-- > 0; ) {
 		switch (sendfn(name)) {
-			case ETX: if (++aborts > 2) return(ABORT);
-			case OK: return(OK);
+			case ETX: if (++aborts > 2) return(XMODEM_ABORT);
+			case XMODEM_OK: return(XMODEM_OK);
 		}
 	}
-	return(ERROR);
+	return(XMODEM_ERROR);
 }
 
 /* Send a file in XMODEM. */
@@ -360,7 +373,7 @@ static int sendfile(int file,          /* open file */
 	aborts= 0;			/* no Control-Cs yet */
 
 	crcmode= waitnak();			/* get initial NAK/CRC mode */
-	if (crcmode == ERROR) return(ERROR);	/* if not NAK/CRC, error */
+	if (crcmode == XMODEM_ERROR) return(XMODEM_ERROR);	/* if not NAK/CRC, error */
 	if (statflg) sendtel(fileinfo);		/* file statistics */
 
 	for (errors= 0; errors < 10; ) {		/* (no, not a mistake ...) */
@@ -368,7 +381,7 @@ static int sendfile(int file,          /* open file */
 		if (! i) break;				/* end of file */
 		while (i < 128) buff[i++]= 26;		/* pad last block */
 
-		for (errors= 0; errors < 10; ++errors) { /* (... its really OK) */
+		for (errors= 0; errors < 10; ++errors) { /* (... its really XMODEM_OK) */
 			xferstat(0,"Block %u",blknum);	/* stats for the nosy sysop */
 			modout(SOH);			/* tell rcvr a block comes */
 			sendblock(sector,crcmode,buff);
@@ -398,13 +411,13 @@ static int sendfile(int file,          /* open file */
 			if (modin(1000) == ACK) break;
 			flush(0);
 		}
-		return(OK);
+		return(XMODEM_OK);
 	}
-	return(ERROR);
+	return(XMODEM_ERROR);
 }
 
 /* Get an acknowledge character or timeout. Return the character
-received, or TIMEOUT for a timeout, ABORT for 3 Control-Cs in a row. */
+received, or TIMEOUT for a timeout, XMODEM_ABORT for 3 Control-Cs in a row. */
 
 static int getack()
 {
@@ -421,15 +434,15 @@ static int getack()
 			case NAK: xferstat(0,"NAK"); return(c);
 
 			case ETX: xferstat(1,"Control-C");
-				if (++aborts > 2) return(ABORT); 
+				if (++aborts > 2) return(XMODEM_ABORT); 
 				break;
 
-			case -1: return(ERROR); break;
+			case -1: return(XMODEM_ERROR); break;
 		}
 	}
 }
 
-/* Wait for an initial NAK or CRC; return 0 for NAK, 1 for CRC, or ERROR
+/* Wait for an initial NAK or CRC; return 0 for NAK, 1 for CRC, or XMODEM_ERROR
 for anything else. */
 
 static int waitnak()
@@ -451,12 +464,12 @@ static int waitnak()
 
 			case ETX:
 				xferstat(1,"Control-C ");
-				if (++aborts > 2) return(ABORT);
+				if (++aborts > 2) return(XMODEM_ABORT);
 				break;
 		}
 		flush(0);
 	}
-	return(ERROR);
+	return(XMODEM_ERROR);
 }
 
 /* Attempt to send the TELINK data block. Do only 4 attempts; if not received 
@@ -482,11 +495,11 @@ char buffer[128],aborts;
 		modout(SYN);
 		sendblock(0,0,buffer);	/* send in checksum, */
 		switch (modin(1000)) {
-			case ACK: return(OK);
-			case ETX: if (++aborts > 2) return(ABORT); break;
+			case ACK: return(XMODEM_OK);
+			case ETX: if (++aborts > 2) return(XMODEM_ABORT); break;
 		}
 	}
-	return(ERROR);
+	return(XMODEM_ERROR);
 }
 
 /* Get an XMODEM block, return its sequence number, or -1 if error. This
@@ -592,8 +605,8 @@ static int put_buff(int f, /* file handle, or dummy */
 	return(n);					/* say what we did */
 }
 
-/* Transmit a filename for batch mode tranmission. Return ERROR if cant do it,
-or OK if sent properly. It is assumed that the receiver is ready to receive
+/* Transmit a filename for batch mode tranmission. Return XMODEM_ERROR if cant do it,
+or XMODEM_OK if sent properly. It is assumed that the receiver is ready to receive
 the filename we have to send. */
 
 static int sendfn(char *name)
@@ -608,11 +621,11 @@ static int sendfn(char *name)
 		if (c == NAK) break;		/* got name NAK */
 
 		if (c == ETX) {			/* if Control-C */
-			if (++chksum > 2) return(ABORT);
+			if (++chksum > 2) return(XMODEM_ABORT);
 		}
 		flush(0);
 	}
-	if (! i) return(ERROR);			/* timeout */
+	if (! i) return(XMODEM_ERROR);			/* timeout */
 
 	cvt_to_fcb(name,localname);		/* convert name, */
 	chksum= 0;				/* start checksum, */
@@ -623,7 +636,7 @@ static int sendfn(char *name)
 		modout(c);			/* send name char, */
 		if (modin(200) != ACK) break;	/* if not an ACK */
 	}
-	if (i >= 11) {				/* if all sent OK */	
+	if (i >= 11) {				/* if all sent XMODEM_OK */	
 		modout(SUB);			/* end of name, */
 		chksum += SUB;			/* stupid protocol */
 		if (modin(100) == (chksum & 0xff)) { /* get recvr's checksum, */
@@ -631,8 +644,8 @@ static int sendfn(char *name)
 			return(0);		/* return happy :-), */
 		}
 	}
-	modout('u');				/* else not sent OK, */
-	return(ERROR);				/* return sad :-( */
+	modout('u');				/* else not sent XMODEM_OK, */
+	return(XMODEM_ERROR);				/* return sad :-( */
 }
 
 /* Get a filename from the sender. */
@@ -652,8 +665,8 @@ static int getfn(char *name)
 	for (i= 0; i < 11; i++) {			/* 11 char max, */
 		c= modin(100);				/* get a char, */
 		switch (c) {
-			case -1: return(ERROR);		/* timeout */
-			case 'u': return(ERROR);	/* error */
+			case -1: return(XMODEM_ERROR);		/* timeout */
+			case 'u': return(XMODEM_ERROR);	/* error */
 			case EOT: return(EOT);		/* no more files */
 			case SUB: break;		/* end of name */
 			default:
@@ -667,10 +680,10 @@ static int getfn(char *name)
 		modout(chksum & 0xff);			/* send check sum, */
 		if (modin(200) == ACK) {
 			cvt_from_fcb(newname,name);	/* fix name, */
-			return(OK);
+			return(XMODEM_OK);
 		}
 	}
-	return(ERROR);					/* filename too long */
+	return(XMODEM_ERROR);					/* filename too long */
 }
 
 /* Convert a CP/M like filename to a normal ASCIZ name. */

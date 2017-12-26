@@ -1,4 +1,8 @@
 #pragma once
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 #include <stdint.h>
 
 struct _orig_xfbuf {
@@ -16,7 +20,11 @@ uint16_t gdate();
 /* bytes to long integer */
 //long _ctol(char *pos);
 /* set file time */
-int _ftime(int flag, int handle, uint16_t *timedate);
+#ifdef _WIN32
+int _filetime(int op, HANDLE handle, uint16_t *timedat);
+#else
+int _filetime(int op, int handle, uint16_t *timedat);
+#endif
 /* initialize the crc*/
 void clrcrc();
 void updcrc(char c);

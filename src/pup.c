@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <setjmp.h>
-#include "abort.h"
 #include "ascii.h"
 #include "driver.h"
 #include "edit.h"

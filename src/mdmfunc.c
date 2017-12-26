@@ -242,7 +242,7 @@ static void modem_chk()
 	int i;
 
 	cd_flag= 1;
-	for (i= 3; i--; i >= 0) {
+	for (i= 3; i >= 0; i--) {
 		if (sendwt("AT\r") >= 0) return;
 	}
 	printf("Pup says: \"Modem not responding!\"\r\n");

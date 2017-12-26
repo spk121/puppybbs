@@ -148,7 +148,7 @@ long _ctol(char *pos)
 int _find(char *pathname, int n, struct _orig_xfbuf *xfbuf)
 {
 	int ret = 0;
-	printf("in dummy func _find(%s,%d,%u) returning %d\n", pathname, n, (unsigned) xfbuf, ret);
+	printf("in dummy func _find(%s,%lld,%u) returning %d\n", pathname, n, (unsigned long long) xfbuf, ret);
 	return ret;
 }
 
@@ -170,12 +170,17 @@ _lseek();
  * It is used in xmodem.c to preserve the creation date
  * of files downloaded via xmodem.
  * */
-int _ftime(int op, int handle, uint16_t *timedat)
+#ifdef _WIN32
+int _filetime(int op, HANDLE handle, uint16_t *timedat)
+#else
+int _filetime(int op, int handle, uint16_t *timedat)
+#endif
 {
 	if (op == 1)
 	{
 		/* setting file time */
-		struct tm *brokentime = localtime(time(0));
+		time_t now = time(0);
+		struct tm *brokentime = localtime(&now);
 		brokentime->tm_sec = 2 * (timedat[0] & 0x1f);
 		brokentime->tm_min = (timedat[0] >> 5) & 0x3f;
 		brokentime->tm_hour = (timedat[0] >> 11);
@@ -188,7 +193,21 @@ int _ftime(int op, int handle, uint16_t *timedat)
 		TVP[0].tv_usec = 0;
 		TVP[1].tv_sec = timestamp;
 		TVP[1].tv_usec = 0;
+#ifdef _WIN32
+		SYSTEMTIME systime;
+		FILETIME win32time;
+		systime.wYear = brokentime->tm_year + 1900;
+		systime.wMonth = brokentime->tm_mon;
+		systime.wDay = brokentime->tm_mday;
+		systime.wHour = brokentime->tm_hour;
+		systime.wMinute = brokentime->tm_min;
+		systime.wSecond = brokentime->tm_sec;
+		SystemTimeToFileTime(&systime, &win32time);
+		BOOL ret = SetFileTime(handle, &win32time, &win32time, &win32time);
+		return ret;
+#else
 		futimes(handle, TVP);
+#endif
 		return 1;
 	}
 	return 0;

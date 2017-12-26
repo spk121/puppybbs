@@ -44,7 +44,11 @@ long millisec;
 long millis2;
 int seconds, minutes, hours;
 
+#ifdef _WIN32
+HANDLE serial_port_fd = INVALID_HANDLE_VALUE;
+#else
 int serial_port_fd = -1;
+#endif
 int next_char = -1;
 
 /* Sets the screen variables. */
