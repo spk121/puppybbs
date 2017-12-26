@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include "abort.h"
 #include "ascii.h"
 #include "compat.h"
 #include "mdmfunc.h"
