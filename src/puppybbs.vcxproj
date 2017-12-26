@@ -118,7 +118,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="abort.c" />
     <ClCompile Include="compat.c" />
     <ClCompile Include="edit.c" />
     <ClCompile Include="files.c" />
@@ -128,7 +127,6 @@
     <ClCompile Include="ms-asm.c" />
     <ClCompile Include="ms-c.c" />
     <ClCompile Include="msgbase.c" />
-    <ClCompile Include="printf.c" />
     <ClCompile Include="pup.c" />
     <ClCompile Include="pupmain.c" />
     <ClCompile Include="quote.c" />
@@ -137,7 +135,6 @@
     <ClCompile Include="xmodem.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="abort.h" />
     <ClInclude Include="ascii.h" />
     <ClInclude Include="compat.h" />
     <ClInclude Include="driver.h" />
@@ -149,7 +146,6 @@
     <ClInclude Include="ms-asm.h" />
     <ClInclude Include="ms-c.h" />
     <ClInclude Include="msgbase.h" />
-    <ClInclude Include="printf.h" />
     <ClInclude Include="pup.h" />
     <ClInclude Include="pupmem.h" />
     <ClInclude Include="puppy.h" />

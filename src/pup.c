@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "abort.h"
 #include "ascii.h"
 #include "driver.h"
 #include "edit.h"
