@@ -35,6 +35,8 @@
 *.i*86
 *.x86_64
 *.hex
+puppy
+set-pup
 
 # Debug files
 *.dSYM/
@@ -56,3 +58,9 @@ dkms.conf
 *.tlog
 *.log
 *.filters
+
+# Temporary files
+*~
+*.tmp
+*.temp
+*.orig
