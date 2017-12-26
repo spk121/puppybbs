@@ -30,6 +30,8 @@ int fakemodem_connect_get();
 #define XO_CREAT (_O_CREAT)
 #define XO_RDONLY (_O_RDONLY)
 #define XO_RDWR (_O_RDWR)
+#define XO_NOCTTY 0
+#define XO_NONBLOCK 0
 #else
 #define XS_IREAD (S_IREAD)
 #define XS_IWRITE (S_IWRITE)

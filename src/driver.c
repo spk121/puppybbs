@@ -2,12 +2,17 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <errno.h>
+#ifdef _WIN32
+#else
 #include <termios.h>
 #include <unistd.h>
-#include <errno.h>
 #include <sys/ioctl.h>
 #include <pthread.h>
+#endif
+#include "compat.h"
 #include "driver.h"
+#include "serial.h"
 
 /* Standard Fido driver parameters. These must be static variables. These
 are assumed to be set properly by init() in the hardware specific driver. */
@@ -38,7 +43,11 @@ long millisec;
 long millis2;
 int seconds, minutes, hours;
 
+#ifdef _WIN32
+HANDLE serial_port_fd = INVALID_HANDLE_VALUE;
+#else
 int serial_port_fd = -1;
+#endif
 int next_char = -1;
 
 /* Sets the screen variables. */
@@ -70,28 +79,40 @@ void init()
     scrinit();
 
     // Open serial port
-    serial_port_fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NONBLOCK);
+#ifdef _WIN32
+	serial_port_fd = serial_port_open("COM3");
+#else
+    serial_port_fd = xopen2("/dev/ttyUSB0", XO_RDWR | XO_NOCTTY | XO_NONBLOCK);
     if (serial_port_fd == -1)
     {
         perror("Opening serial port /dev/ttyUSB0");
     }
+#endif
     raise_dtr();
 }
  
 
 void uninit()
 {
+#ifdef _WIN32
+	if (serial_port_fd != INVALID_HANDLE_VALUE)
+		serial_port_close(serial_port_fd);
+#else
     if (serial_port_fd != -1)
     {
         int ret = close(serial_port_fd);
         if (ret == -1)
             perror("Closing serial port");
     }
-	printf("in dummy func uninit()\n");
+#endif
 }
 
 void baud(int datarate)
 {
+#ifdef _WIN32
+	if (serial_port_fd != INVALID_HANDLE_VALUE)
+		serial_port_set_baud_rate(serial_port_fd, datarate);
+#else
     struct termios tios;
     if (serial_port_fd != -1)
     {
@@ -126,11 +147,17 @@ void baud(int datarate)
             return;
         }
     }
+#endif
 }
 
 /* Return TRUE if a character is avaiable to be read from the modem. */
 int _mconstat()
 {
+#ifdef _WIN32
+	if (serial_port_fd == INVALID_HANDLE_VALUE)
+		return FALSE;
+	return serial_port_char_available(serial_port_fd);
+#else
     if (next_char != -1)
         return 1;
 
@@ -142,11 +169,17 @@ int _mconstat()
     }
 
     return 0;
+#endif
 }
 
 /* Return the next available character from the modem. */
 unsigned char _mconin()
 {
+#ifdef _WIN32
+	if (serial_port_fd == INVALID_HANDLE_VALUE)
+		return FALSE;
+	return serial_port_read_char(serial_port_fd);
+#else
     if (next_char != -1)
     {
         int c = next_char;
@@ -161,21 +194,33 @@ unsigned char _mconin()
     }
 
     return 0;
+#endif
 }
 
 /* Write a character to the modem. */
 void _mconout(char c)
 {
+#ifdef _WIN32
+	if (serial_port_fd == INVALID_HANDLE_VALUE)
+		return;
+	serial_port_write_char(serial_port_fd, c);
+#else
     if (serial_port_fd != -1)
     {
         if (write(serial_port_fd, &c, 1) == -1)
             perror("writing to serial port");
     }
+#endif
 }
 
 /* Return true if modem is connected. */
 int _cd()
 {
+#ifdef _WIN32
+	if (serial_port_fd == INVALID_HANDLE_VALUE)
+		return FALSE;
+	return serial_port_get_carrier_detect(serial_port_fd);
+#else
     if (serial_port_fd != -1)
     {
         // Check serial carrier detect flag.
@@ -184,26 +229,39 @@ int _cd()
         return DCD_flag & TIOCM_CAR;
     }
     return 0;
+#endif
 }
 
 void lower_dtr()
 {
+#ifdef _WIN32
+	if (serial_port_fd == INVALID_HANDLE_VALUE)
+		return;
+	serial_port_lower_dtr(serial_port_fd);
+#else
     if (serial_port_fd != -1)
     {
         int DTR_flag;
         DTR_flag = TIOCM_DTR;
         ioctl(serial_port_fd, TIOCMBIC, &DTR_flag);
     }
+#endif
 }
 
 void raise_dtr()
 {
+#ifdef _WIN32
+	if (serial_port_fd == INVALID_HANDLE_VALUE)
+		return;
+	serial_port_raise_dtr(serial_port_fd);
+#else
     if (serial_port_fd != -1)
     {
         int DTR_flag;
         DTR_flag = TIOCM_DTR;
         ioctl(serial_port_fd, TIOCMBIS, &DTR_flag);
     }
+#endif
 }
 
 int _mbusy()
@@ -213,7 +271,11 @@ int _mbusy()
 	return ret;
 }
 
+#ifdef _WIN32
+uintptr_t thd;
+#else
 pthread_t thd;
+#endif
 int thd_continue;
 
 void clr_clk()
@@ -225,6 +287,28 @@ void clr_clk()
 }
 
 
+#ifdef _WIN32
+void clk_handler(void *arg)
+{
+	int tic = 1;
+	while (thd_continue)
+	{
+		Sleep(1);
+
+		millisec++;
+		millis2++;
+		if (tic % 1000 == 0)
+			seconds++;
+		if (seconds > 59)
+		{
+			seconds = 0;
+			minutes++;
+		}
+
+		tic++;
+	}
+}
+#else
 void *clk_handler(void *arg)
 {
     int tic = 1;
@@ -246,12 +330,19 @@ void *clk_handler(void *arg)
     }
     return NULL;
 }
+#endif
 
 void set_clk()
 {
     int ret;
     thd_continue = 1;
+#ifdef _WIN32
+	thd = _beginthread(clk_handler, 0, NULL);
+	if (thd == -1)
+		printf("error creating clock thread\n");
+#else
     ret = pthread_create(&thd, NULL, clk_handler, NULL);
+#endif
 }
 
 void reset_clk()

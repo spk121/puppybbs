@@ -1,9 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
+#ifdef _WIN32
+#else
+#include <termios.h>
+#include <sys/ioctl.h>
+#endif
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
-#include <termios.h>
-#include <sys/ioctl.h>
 #include "compat.h"
 #include "ms-asm.h"
 #include "ms-c.h"
@@ -185,7 +188,7 @@ void close_up()
 
 int lconin()
 {
-#ifdef WIN32
+#ifdef _WIN32
 	//return(bdos(7));
 	return _getch();
 #else
@@ -196,7 +199,7 @@ int lconin()
 
 char keyhit()
 {
-#ifdef WIN32
+#ifdef _WIN32
 	if (_kbhit())
 		return _getch();
 	else

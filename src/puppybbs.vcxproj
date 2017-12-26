@@ -119,6 +119,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="compat.c" />
+    <ClCompile Include="driver.c" />
     <ClCompile Include="edit.c" />
     <ClCompile Include="files.c" />
     <ClCompile Include="login.c" />
@@ -131,6 +132,7 @@
     <ClCompile Include="pupmain.c" />
     <ClCompile Include="quote.c" />
     <ClCompile Include="sched.c" />
+    <ClCompile Include="serial.c" />
     <ClCompile Include="support.c" />
     <ClCompile Include="xmodem.c" />
   </ItemGroup>
@@ -151,6 +153,7 @@
     <ClInclude Include="puppy.h" />
     <ClInclude Include="quote.h" />
     <ClInclude Include="sched.h" />
+    <ClInclude Include="serial.h" />
     <ClInclude Include="support.h" />
     <ClInclude Include="xmodem.h" />
   </ItemGroup>

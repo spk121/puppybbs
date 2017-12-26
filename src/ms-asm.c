@@ -1,5 +1,9 @@
-#include <time.h>
+#ifdef _WIN32
+#include <Winsock2.h>
+#else
 #include <sys/time.h>
+#endif
+#include <time.h>
 #include "ms-asm.h"
 
 /* MS-DOS 16-bit time appears to have been
@@ -187,4 +191,5 @@ int _ftime(int op, int handle, uint16_t *timedat)
 		futimes(handle, TVP);
 		return 1;
 	}
+	return 0;
 }
