@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <setjmp.h>
 #include "abort.h"
 #include "ascii.h"
 #include "driver.h"
@@ -30,6 +31,7 @@ command prompt and the message base commands below it.
 static int msgnbr;		/* current message number */
 static WORD last_topic;		/* topic from last msg read */
 static int topic;		/* currently selected topic(s) */
+jmp_buf jb;               /* non-local exit placeholder */
 
 static void goodbye();
 static void msg_base();
@@ -72,8 +74,9 @@ call returned from!
 This time though the flag is SET (remember that?) so was_abort() takes
 its TRUE branch, and Pup cleans up. */
 
-	set_abort(0);				/* set carrier loss trap */
-	if (was_abort()) {			/* if we get a frc_abort() */
+
+	if (setjmp(jb) != 0) /* set carrier loss trap */
+	{
 		printf("\r\n\r\n");		/* close up */
 		closemsg();			/* close the message base, */
 		closeclr();			/* close the caller file */

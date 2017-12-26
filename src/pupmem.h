@@ -2,6 +2,7 @@
 /*
 	pup's memory usage declarations.
 */
+#include <setjmp.h>
 #include "puppy.h"
 
 extern struct _pup pup;		/* our main system file */
@@ -48,3 +49,4 @@ extern int textsize;		/* and its size */
 
 // extern WORD seconds,minutes,hours; /* MSDOS driver */
 
+extern jmp_buf jb;               /* non-local exit placeholder */

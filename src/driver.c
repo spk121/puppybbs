@@ -81,13 +81,13 @@ void init()
 
 void uninit()
 {
+    reset_clk();
     if (serial_port_fd != -1)
     {
         int ret = close(serial_port_fd);
         if (ret == -1)
             perror("Closing serial port");
     }
-	printf("in dummy func uninit()\n");
 }
 
 void baud(int datarate)

@@ -157,7 +157,7 @@ void logoff(int code, int disc)
 	limit= 0;				/* disable time limits */
 	doscode= code;				/* set result code, */
 	if (!test && disc) discon();		/* do disconnect, */
-	frc_abort();				/* force rturn to main */
+	longjmp(jb, 1);				/* force rturn to main */
 }
 
 /* Copy the path prefix, append one filename from the input string. */
