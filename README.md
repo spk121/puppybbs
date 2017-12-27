@@ -116,3 +116,25 @@ world, but it was fun to read about.
   Is there something easier than regex?
 - download() searches files by regex.
 
+### Libraries
+-   Standard C++ filesystem library:
+    [documentation](http://en.cppreference.com/w/cpp/filesystem)
+-   Standard C++ locale library sets up text encoding:
+    [documentation](http://en.cppreference.com/w/cpp/locale)
+-   Standard C++ messages library stores lists of translations:
+    [documentation](http://en.cppreference.com/w/cpp/locale/messages)
+-   The MySQL Connector/C++ (GPL):
+    [documentation](https://dev.mysql.com/doc/connector-cpp/en/) and
+    [code](https://dev.mysql.com/downloads/connector/cpp/)
+-   Ncurses (BSD):
+    [documentation](http://invisible-island.net/ncurses/ncurses.html) and
+    [code](ftp://ftp.invisible-island.net/ncurses/ncurses.tar.gz)
+    including the underdocumented C++ bindings
+-   Boost [documentation](http://www.boost.org/doc/libs/1_66_0/) and
+    [code](https://dl.bintray.com/boostorg/release/1.66.0/source/)
+-   lrzsz (GPL2)
+    [documentation and code](https://ohse.de/uwe/software/lrzsz.html), but
+    see jnavila's patched version on
+    [github](https://github.com/jnavila/lrzsz)
+-   caseykelso's xmodem on [github](https://github.com/caseykelso/xmodem)
+
