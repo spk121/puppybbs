@@ -35,9 +35,76 @@ Github, and he said okay.  And so this is what that is.
 I did already haxor the crap out of it once.  But now, I'm going to do
 it again with a bit more rigor.
 
-Note that the license for all this is non-standard and weird and
-doesn't really qualify as "free" or "open source" in the modern
-understanding of such things.
+Note that the license for all this is non-standard and weird and doesn't
+really qualify as "free" or "open source" in the modern understanding of
+such things.
+
+## Puppy's internal databases
+
+### Topics
+
+The 16 topics are stored as
+- name: char[8]
+- description: char[24]
+
+### The caller database
+
+The caller is stored as
+
+- name: char[36]
+- date: uint16_t[16]. 16-bit MS-DOS date of the most recent message read in
+  each topic
+- topic: uint16_t. Number from 1 to 16 of last topic selected
+- lines: uint8_t. preferred number of screen lines
+- cols: uint8_t. preferred number of screen cols
+- calls: uint_16_t. number of calls by this user
+- extra: uint16_t (unused)
+
+The number of callers is limited to 25 in PUP.SET or 100 in defaults
+
+### The messages database
+
+The message header
+
+- from: char[36]
+- to: char[36]
+- subj: char[36]
+- date: MS-DOS 16-bit date
+- time: MS-DOS 16-bit time
+- extra: uint16_t (unused)
+- attr: uint16_t (unused)
+- topic: uint16_t
+- topic_map: uint16_t (set to zero but unused)
+- message: char[2048 or 2560]
+
+It looks like extra, attr, and topic_map are unused.
+TOPIC is 1 to 16: one of the 16 topic keywords categories.
+
+The message size of 2048 was probably chosen as around 80 * 25.
+
+The maximum number of messages is limited to 10 by 2560 in PUP.SET, or 50 by
+2048 in defaults, with old ones expiring, so the message database is limited
+to 25k in PUP.SET or  100kB max in default. The 25k was probably for MS-DOS
+memory handling or floppy disk storage.
+
+### The files database
+
+All downloadable files were stored on the local file system in a
+single folder.  There was a file "FILES.PUP" that held a database
+of files that could be downloaded.
+
+The "FILES.PUP" file format was
+- filename: char[13]
+- description: char[40]
+
+If FILENAME began with a space or hyphen then description is
+just a comment.
+
+If FILENAME began with ^Z or @, that was the end of the database.
+
+Other part of the files 'database' comes from the filesystem
+itself, including creation time and file size.
+
 
 ## On Making a Telnet BBS
 
@@ -95,6 +162,21 @@ It seems a bit like coding up an old school DLL back in the day.
 
 This is also pointless, since my Windows 10 box is not exposed to the
 world, but it was fun to read about.
+
+## Required algorithms
+
+### Getting user's terminal size
+
+In original Puppy, the user is queried for the number of rows and columns
+his terminal supports.  In Pupper we're going to ask for the terminal
+instead.  The default terminal size is in the terminfo database.
+
+Note that for ncurses, we need use_env(FALSE) and use_toictl(FALSE) to
+be called before any ncurses stuff, so that ncurses uses the
+number of rows and columns in the terminfo database, instead of trying
+to query it from environment variables or ioctl calls.  Those
+aren't relevant here because we're running on a client's terminal over
+telnet.
 
 ## Replaceable Code
 
