@@ -69,7 +69,7 @@ put_pkt() {}		/* dummy */
 
 int main(int argc, char **argv)
 {
-	int i,n;
+	int i;
 	FLAG evtmsg;		/* 1 == we announced upcoming event */
 	FLAG rdymsg;		/* 1 == we announced "waiting ... " */
 	FLAG mdmmsg;		/* 1 == we initialized the modem */

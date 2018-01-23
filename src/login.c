@@ -55,7 +55,7 @@ void login()
 {
 	char full_name[SS];		/* callers full name */
 	char *cp,buff[SS];		/* working space */
-	int n,i,f;
+	int n,i;
 	int hash;			/* hash code from the name */
 
 	limit= pup.nlimit;
@@ -144,7 +144,6 @@ void setscreen()
 
 void stuff()
 {
-	char *cp;
 	int i;
 	WORD time,date;
 

@@ -104,7 +104,8 @@ char *str_date(WORD t)
 	static char work[2][sizeof("31 Dec 143 ")];	/* where we keep them */
 	static int k = 0;					/* which one as are on */
 
-	k = ++k % 2;		/* select next ... */
+	k++;
+	k = k % 2;		/* select next ... */
 	*work[k]= NUL;		/* empty it */
 
 	sprintf(work[k],"%u %s %02u",		/* the format, */
@@ -122,7 +123,8 @@ char *str_time(WORD t)
 	static int k = 0;					/* which one as are on */
 	char hour;
 
-	k = ++k % 2;		/* select next ... */
+	k++;
+	k = k % 2;		/* select next ... */
 	*work[k]= NUL;		/* empty it */
 
 	hour= t >> 11; if (!hour) hour= 12;
@@ -137,7 +139,6 @@ open handle, or -1 if error. */
 int append(char *s)
 {
 	int h;
-	char c;
 
 	h= xopen2(s,2);				/* open or create the */
 	if (h == -1) h= xcreat(s,2);		/* file, if opened OK */
@@ -149,10 +150,6 @@ int append(char *s)
 
 void logoff(int code, int disc)
 {
-	int f;
-	char buff[SS];
-	long p;
-
 	limit= 0;				/* disable time limits */
 	doscode= code;				/* set result code, */
 	if (!test && disc) discon();		/* do disconnect, */
@@ -186,7 +183,7 @@ an open file is passed. Output ceases when EOF or a Control-Z is found. */
 
 void dumptext(int file)
 {
-	char lastc,c,buff[512];				/* local buffering */
+	unsigned char lastc,c,buff[512];				/* local buffering */
 	unsigned index,count;
 
 	if (file == -1) return;				/* be serious */
@@ -237,7 +234,7 @@ terminated by LFs. */
 char rline(int file, char *buf, int len)
 {
 	int i;
-	char notempty,c;
+	unsigned char notempty,c;
 
 	i= 0; notempty= 0;
 	--len;						/* compensate for added NUL */
@@ -392,7 +389,8 @@ char *str_node(struct _node *n)
 	static char work[KLUDGE][40];	/* where we keep them */
 	static int k;			/* which one as are on */
 
-	k = ++k % KLUDGE;	/* select next ... */
+	k++;
+	k = k % KLUDGE;	/* select next ... */
 	*work[k]= NUL;		/* empty it */
 	sprintf(work[k],"%d:",n-> zone);
 	sprintf(&work[k][strlen(work[k])],"%d/%d",n-> net,n-> number);
@@ -404,7 +402,6 @@ char *str_node(struct _node *n)
 
 int delim(char c)
 {
-	int i;
 	switch (c) {
 		case ';': 
 		case ' ': 

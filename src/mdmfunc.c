@@ -8,6 +8,7 @@
 #include "driver.h"
 #include "mdmfunc.h"
 #include "modemio.h"
+#include "ms-c.h"
 #include "puppy.h"
 #include "pupmem.h"
 #include "support.h"
@@ -109,9 +110,6 @@ static int chk_modem();
 
 void init_modem(char *initstr)
 {
-	char *si;
-	int i,n;
-
 	printf("Pup says: \"Initializing the modem\"\r\n");
 	cd_flag= 1;			/* ignore carrier */
 	setbaud(pup.maxbaud);		/* set the data rate */
@@ -303,9 +301,8 @@ some of these messages dont apply to all cases. */
 
 int connect(int result)
 {
-	char *s;
+	char *s = "";
 	int r,n;
-	long x;
 
 	n= -1;
 	s= "";
@@ -359,11 +356,8 @@ special cased in dial(), and incoming RING is special cased in answer(). */
 	if (n == 1) {
 		setbaud(r);			/* set baud rate, */
 		flush(20);			/* flush trash */
-#if 0
-		sprintf(mdmresult,"Connected at %,d%s",datarate,s);
-#else
-		sprintf(mdmresult, "Connected at %d", datarate);
-#endif
+
+		sprintf(mdmresult,"Connected at %d%s",datarate,s);
 	}
 	if (*mdmresult) {
 		puts("Modem says: \"");
@@ -393,15 +387,15 @@ static int chk_modem()
 
 	cd_flag= 1;				/* we are NOT online! */
 	if (_mconstat()) {			/* if a character there, */
-		buff[i]= _mconin() & 0x7f;	/* get it, */
-		if (buff[i] == CR) {		/* if a complete line, */
+		buff[(int)(unsigned char)i]= _mconin() & 0x7f;	/* get it, */
+		if (buff[(int)(unsigned char)i] == CR) {		/* if a complete line, */
 			i= 0;			/* empty the line, */
 			return(atoi(buff));	/* return the result */
 
-		} else if (isdigit(buff[i])) {	/* if a new digit, */
+		} else if (isdigit(buff[(int)(unsigned char)i])) {	/* if a new digit, */
 			++i;			/* install it, */
 		}
-		buff[i]= NUL;			/* terminate string & erase non-digit */
+		buff[(int)(unsigned char)i]= NUL;			/* terminate string & erase non-digit */
 	}
 	return(-1);				/* nothing happened */
 }

@@ -336,14 +336,13 @@ void *clk_handler(void *arg)
 
 void set_clk()
 {
-    int ret;
     thd_continue = 1;
 #ifdef _WIN32
 	thd = _beginthread(clk_handler, 0, NULL);
 	if (thd == -1)
 		printf("error creating clock thread\n");
 #else
-    ret = pthread_create(&thd, NULL, clk_handler, NULL);
+    pthread_create(&thd, NULL, clk_handler, NULL);
 #endif
 }
 

@@ -158,7 +158,7 @@ void cmdflush()
 
 int ask(char *s)
 {
-	char c,cp,buff[SS];
+	char buff[SS];
 
 	strcpy(buff,s);
 	strcat(buff,"? [Y,n]: ");
@@ -219,7 +219,7 @@ int input(char *prompt, char *buff, int len)
 	line= 0;				/* reset "more" */
 	while (1) {
 		c= mconin();			/* get a key, */
-		switch (c) {
+		switch ((unsigned char)c) {
 			case TSYNC:		/* KLUDGE */
 				i= 0;		/* clear buffer ... */
 				buff[i]= NUL;
@@ -265,10 +265,10 @@ as necessary to fit within the current width. */
 void fmconout(char c)
 {
 	if (c >= ' ') {				/* printable chars */
-		word[wordi++]= c;		/* build a word */
+		word[(int)(unsigned char)(wordi++)]= c;		/* build a word */
 		if ((wordi + MARGIN < caller.cols) && !delim(c)) return;
 	}
-	word[wordi]= NUL;			/* terminate it for output */
+	word[(int)(unsigned char)wordi]= NUL;			/* terminate it for output */
 
 /* End of a word, word too large, or a control character. */
 
@@ -277,8 +277,8 @@ void fmconout(char c)
 		mconout(LF);
 	}
 	if (*word) {				/* if there is a word there, */
-		for (wordi= 0; word[wordi]; wordi++)
-			mconout(word[wordi]);	/* output it */
+		for (wordi= 0; word[(int)(unsigned char)wordi] != '\0'; wordi++)
+			mconout(word[(int)(unsigned char)wordi]);	/* output it */
 		wordi= 0; 			/* now its gone */
 	}
 	if ((c < ' ') && (c != SUB)) mconout(c); /* do control chars */
@@ -332,7 +332,8 @@ int mconin()
 			logoff(0,1);
 		}
 	}
-	tail= ++tail % sizeof(conbuf);
+	tail++;
+	tail= tail % sizeof(conbuf);
 	return( (int) conbuf[tail]);
 }
 
@@ -352,7 +353,7 @@ all incoming characters EXCEPT TSYNC! This lets us support Continuous Mail. */
 
 void pollkbd()
 {
-	char c;
+	unsigned char c;
 
 	limitusr();				/* maybe forced logoff */
 
@@ -373,7 +374,7 @@ void pollkbd()
 /* Put this character into the ring buffer, process the special
 control characters as necessary. */
 
-void put_c(char c)
+void put_c(unsigned char c)
 {
 	switch (c) {
 		case ETX:			/* Control-C */
@@ -390,7 +391,8 @@ void put_c(char c)
 	}
 	if (head != tail) {			/* if room, install it */
 		conbuf[head]= c;
-		head= ++head % sizeof(conbuf);
+		head ++;
+		head= head % sizeof(conbuf);
 	}
 }
 

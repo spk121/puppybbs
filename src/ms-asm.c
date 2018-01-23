@@ -3,6 +3,7 @@
 #else
 #include <sys/time.h>
 #endif
+#include <stdio.h>
 #include <time.h>
 #include "ms-asm.h"
 
@@ -148,7 +149,7 @@ long _ctol(char *pos)
 int _find(char *pathname, int n, struct _orig_xfbuf *xfbuf)
 {
 	int ret = 0;
-	printf("in dummy func _find(%s,%lld,%u) returning %d\n", pathname, n, (unsigned long long) xfbuf, ret);
+	printf("in dummy func _find(%s, %d, %lld) returning %d\n", pathname, n, (unsigned long long) xfbuf, ret);
 	return ret;
 }
 

@@ -10,7 +10,7 @@ void mconout(char c);
 int mconin();
 int mconstat();
 void pollkbd();
-void put_c(char c);
+void put_c(unsigned char c);
 void mconflush();
 void mprintf(char *f, ...);
 void mputs(char *s);

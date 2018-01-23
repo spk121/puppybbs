@@ -97,8 +97,8 @@ static WORD til_event(int n)
 
 	if ((now >= start) && (now < end)) 	/* should be running now */
 		return(0);			/* zero mins until start ... */
-
-	start -= now;				/* just time until it starts */
-	if (start < 0) start += MINS_DAY;	/* modulo one week */
-	return(start);
+	int tmp = (int)start - (int)now;
+	while (tmp < 0)
+		tmp += MINS_DAY;
+	return(tmp);
 }

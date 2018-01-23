@@ -176,9 +176,8 @@ previous year. */
 
 static void pickmsg()
 {
-	int i;
-	char *cp,buff[SS];
 	WORD w;
+	char *cp;
 
 	cp= getarg("Jump to message: T)oday U)nread S)earch, or enter a date: ");
 
@@ -455,7 +454,6 @@ static void msgline(int n)
 
 static int getlno(char *ps, int lim)
 {
-	char *cp;
 	int n;
 
 	n= atoi(getarg(ps)) - 1;		/* get one, (garbage becomes -1) */

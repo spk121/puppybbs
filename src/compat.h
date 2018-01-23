@@ -38,6 +38,8 @@ int fakemodem_connect_get();
 #define XO_CREAT (O_CREAT)
 #define XO_RDONLY (O_RDONLY)
 #define XO_RDWR (O_RDWR)
+#define XO_NOCTTY (O_NOCTTY)
+#define XO_NONBLOCK (O_NONBLOCK)
 #endif
 int xaccess(const char *filename, int how);
 int xclose(int filedes);
