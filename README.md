@@ -30,9 +30,15 @@ another landline for this nonsense.
 Anyway, I e-mailed Tom and asked if I could hack it up and post it on
 Github, and he said okay.  And so this is what that is.
 
-So, in the src directory is a version of puppybbs that builds.  Does
-it work?  I don't know.  I'll never have two land lines with which to
-test it.  But it does launch so you can get a sense of it.
+## Organization
+
+In the *original* directory is the code more or less how I found
+it.
+
+In the *src* directory is a version of puppybbs that builds on Linux.
+
+Does it work?  I don't know.  I'll never have two land lines with
+which to test it.  But it does launch so you can get a sense of it.
 
 Note that the license for all this is non-standard and weird and doesn't
 really qualify as "free" or "open source" in the modern understanding of
